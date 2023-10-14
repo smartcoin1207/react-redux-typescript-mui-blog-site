@@ -33,6 +33,8 @@ export const theme = createTheme({
         },
       },
     },
+
+    
     palette: {
       primary: {//bgcolor
         main: blue[500],
@@ -65,6 +67,9 @@ export const theme = createTheme({
         black: '#000000',
         white: '#ffffff',
       },
+    },
+    shape: {
+      borderRadius: 15, // Adjust the value as per your preference
     },
   });
 

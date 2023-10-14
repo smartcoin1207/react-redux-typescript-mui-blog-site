@@ -8,7 +8,7 @@ import meal1 from '../../assets/meal1.jpg'
 import meal2 from '../../assets/meal2.jpg'
 import meal3 from '../../assets/meal4.jpg'
 import meal4 from '../../assets/meal5.jpg'
-import LineChart from './LineChart';
+import LineChart from './lineChart';
 import MealOrderStatistics from './MealOrderStatistics';
 import FavoriteMeals from './FavoriteMeals';
 import Suggestions from './Suggestions';
