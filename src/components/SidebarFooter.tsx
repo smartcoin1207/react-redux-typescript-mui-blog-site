@@ -69,14 +69,14 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({ children, collapse
           <Box sx={{ marginBottom: '12px' }}>
             <Github size={30} />
           </Box>
-          <Typography fontWeight={600} sx={{ fontSize:'11pt' }}>Pro Template</Typography>
+          <Typography fontWeight={600} sx={{ fontSize:'11pt' }}>サイトのソース</Typography>
           <Typography variant="caption" sx={{ letterSpacing: 1, opacity: 0.7 }}>
             V {packageJson.version}
           </Typography>
           <Box sx={{ marginTop: '16px' }}>
             <StyledButton href={codeUrl} target="_blank">
               <Typography variant="caption" color="#607489" fontWeight={600}>
-                View code
+              コードを表示する
               </Typography>
             </StyledButton>
           </Box>

@@ -79,14 +79,14 @@ const Config: FC = (): ReactElement => {
       <Box ml={3} mt={5}>
         <FormGroup >
           <Stack direction="row" spacing={1} mt={2} alignItems="center">
-            <Typography>rtl</Typography>
+            <Typography>右側</Typography>
             <AntSwitch value={rtl} onChange={rtlDirectionSwitchChangeHandler} inputProps={{ 'aria-label': 'ant design' }} />
-            <Typography>ltf</Typography>
+            <Typography>左側</Typography>
           </Stack>
           <Stack direction="row" spacing={1} mt={2} alignItems="center">
-            <Typography>light mode</Typography>
+            <Typography>ライトモード</Typography>
             <AntSwitch value={isDark} onChange={themeModeSwitchChangeHandler} defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-            <Typography>dark mode</Typography>
+            <Typography>ダークモード</Typography>
           </Stack>
         </FormGroup>
       </Box>

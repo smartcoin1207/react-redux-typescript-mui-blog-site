@@ -12,7 +12,7 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
       container 
       height='100vh'
       width='100%'
-      sx={{backgroundImage:`url(${SignIn1})`, backgroundSize:'cover'}}
+      sx={{ backgroundSize:'cover'}}
     >
       <Grid item width='33%' />
       <Grid item width='34%' display='flex' justifyContent='center' >

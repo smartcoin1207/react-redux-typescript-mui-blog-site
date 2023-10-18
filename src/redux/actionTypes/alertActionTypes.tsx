@@ -7,6 +7,7 @@ export interface IAlertOpen {
     type: ActionType.OPEN_ALERT_MODAL;
     payload: string;
 }
+
 export interface IAlertToggle {
     type: ActionType.TOGGLE_ALERT_MODAL;
 }

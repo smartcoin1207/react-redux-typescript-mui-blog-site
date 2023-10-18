@@ -14,7 +14,7 @@ export interface IAuthState {
 }
 
 const initialState = {
-    authToken : "test" ,
+    authToken : "" ,
     isPasswordChanged: false,
     user : null , 
     loading: false,
@@ -33,7 +33,7 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
             const auth: Auth = action.payload
             return {
                 ...state,
-                authToken : auth.authToken , 
+                authToken : 'loggedin' , 
                 user : auth.user ,
                 error : null , 
                 loading: false
@@ -44,6 +44,13 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
                 error: action.payload,
                 loading: false
             };
+        case ActionType.AUTH_LOGOUT:
+            return {
+                ...state,
+                user: null,
+                loading: false,
+                authToken: ''
+            }
 
         default:
             return state;

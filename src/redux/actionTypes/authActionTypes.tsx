@@ -4,6 +4,7 @@ export enum ActionType {
     AUTH_START = 'AUTH_START',
     AUTH_SUCCESS = 'AUTH_SUCCESS',
     AUTH_FAIL = 'AUTH_FAIL',
+    AUTH_LOGOUT = 'AUTH_LOGOUT'
 }
 
 export interface IAuthStart {
@@ -18,7 +19,13 @@ export interface IAuthFail {
     payload: string | null;
 }
 
+export interface IAuthLogout {
+    type: ActionType.AUTH_LOGOUT;
+    payload: string | null;
+}
+
 export type Action =
     | IAuthStart
     | IAuthSuccess
-    | IAuthFail;
+    | IAuthFail
+    | IAuthLogout;

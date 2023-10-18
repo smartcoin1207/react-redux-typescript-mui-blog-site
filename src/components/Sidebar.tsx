@@ -13,13 +13,17 @@ import {
 import {
   MenuOutlined, 
   HomeOutlined, 
-  InfoOutlined, 
+  InfoOutlined,
   RestaurantMenuOutlined, 
   SecurityOutlined, 
   FoodBankOutlined, 
   SearchOutlined,
   RecommendOutlined,
   Settings,
+  LocalPostOffice,
+  Category,
+  CategoryTwoTone,
+  SupervisedUserCircleOutlined
 } from "@mui/icons-material";
 import { 
   Box, 
@@ -83,7 +87,7 @@ const SideBar: FC = (): ReactElement => {
             }} 
               variant="h5"
             >
-              Restaurant
+              会社ブログサイト
             </Typography>
           </MenuItem>
         </Menu>
@@ -94,7 +98,7 @@ const SideBar: FC = (): ReactElement => {
                 fontWeight={600}
                 style={{ opacity: collapsed ? 0 : 0.7, letterSpacing: '0.5px' }}
               >
-                General
+                一般的な
               </Typography>
             </Box>
         {/* component="Link" href="/" */}
@@ -102,10 +106,38 @@ const SideBar: FC = (): ReactElement => {
           <MenuItem 
             icon={<HomeOutlined />} 
             onClick={() => (navigate('/', { replace: true }))} 
-            onMouseUp={() => menuItemMouseUpHandler('Home')}
+            onMouseUp={() => menuItemMouseUpHandler('トップページ')}
           >
-            Home
+            トップページ
           </MenuItem>
+          <SubMenu icon={<SupervisedUserCircleOutlined />} label="ユーザー管理">
+            <MenuItem onClick={() => navigate('user/index', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ユーザーリスト')}>ユーザーリスト</MenuItem>
+            <MenuItem onClick={() => navigate('user/create', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ユーザーを追加する')}>ユーザーを追加する</MenuItem>
+          </SubMenu>
+
+          <SubMenu icon={<CategoryTwoTone />} label="ステップ管理">
+            <MenuItem onClick={() => navigate('step/index', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ステップリスト')}>ステップリスト</MenuItem>
+            <MenuItem onClick={() => navigate('step/create', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ステップの作成')}>ステップの作成</MenuItem>
+          </SubMenu>
+
+          <SubMenu icon={<Category />} label="ジャンル管理">
+            <MenuItem onClick={() => navigate('genre/index', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ジャンル一覧')}>ジャンル一覧</MenuItem>
+            <MenuItem onClick={() => navigate('genre/create', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ジャンルを作成する')}>ジャンルを作成する</MenuItem>
+          </SubMenu>
+
+          <SubMenu icon={<LocalPostOffice />} label="ブログ管理">
+            <MenuItem onClick={() => navigate('blog/index', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ブログリスト')}>ブログリスト</MenuItem>
+            <MenuItem onClick={() => navigate('blog/create', { replace: true })}
+              onMouseUp={() => menuItemMouseUpHandler('ブログを作成する')}>ブログを作成する</MenuItem>
+          </SubMenu>
+{/* 
           <SubMenu icon={<InfoOutlined />} label="BaseInfo">
             <MenuItem onClick={() => navigate('baseinfo/company', { replace: true })}
               onMouseUp={() => menuItemMouseUpHandler('Company')}>Company</MenuItem>
@@ -117,8 +149,8 @@ const SideBar: FC = (): ReactElement => {
               onMouseUp={() => menuItemMouseUpHandler('JobPosition')}>JobPosition</MenuItem>
             <MenuItem onClick={() => navigate('baseinfo/Project', { replace: true })}
               onMouseUp={() => menuItemMouseUpHandler('Project')}>Project</MenuItem>
-          </SubMenu>
-          <SubMenu icon={<RestaurantMenuOutlined />} label="Restaurant">
+          </SubMenu> */}
+          {/* <SubMenu icon={<RestaurantMenuOutlined />} label="Restaurant">
             <MenuItem onClick={() => navigate('restaurant/meal', { replace: true })}
               onMouseUp={() => menuItemMouseUpHandler('Meal')}>Meal</MenuItem>
             <MenuItem onClick={() => navigate('restaurant/mealssettingmonthly', { replace: true })}
@@ -140,17 +172,17 @@ const SideBar: FC = (): ReactElement => {
             <MenuItem onClick={() => navigate('security/usergroup', { replace: true })}
               onMouseUp={() => menuItemMouseUpHandler('User and Group')}>User and Group</MenuItem>
           </SubMenu>
-   
+    */}
           <Box sx={{ py: '0', px:'24px', mb: '8px', mt: '32px' }}>
               <Typography
                 variant="body2"
                 fontWeight={600}
                 style={{ opacity: collapsed ? 0 : 0.7, letterSpacing: '0.5px' }}
               >
-                Extra
+                余分な
               </Typography>
             </Box>
-
+{/* 
             <Menu menuItemStyles={menuItemStyles}>
               <MenuItem icon={<FoodBankOutlined />} suffix={<Badge variant="success">New</Badge>}>
                 New Courses
@@ -163,16 +195,16 @@ const SideBar: FC = (): ReactElement => {
               <MenuItem disabled icon={<RecommendOutlined />}>
                 Examples
               </MenuItem>
-            </Menu>
+            </Menu> */}
             <MenuItem 
               icon={<Settings/>}
               onClick={() => navigate('/config', { replace: true })}
-              onMouseUp={() => menuItemMouseUpHandler('Template Configuration')}
+              onMouseUp={() => menuItemMouseUpHandler('サイト構成')}
             >
-              Template Config
+              サイト構成
             </MenuItem>
         </Menu>
-        <SidebarFooter collapsed={collapsed}/>
+        {/* <SidebarFooter collapsed={collapsed}/> */}
       </Sidebar>
   )
 }

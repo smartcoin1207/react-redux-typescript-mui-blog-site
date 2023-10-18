@@ -1,4 +1,7 @@
 import { FC, ReactElement } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import {
   Container,
   IconButton,
@@ -21,14 +24,25 @@ import {
   useTemplateThemeModeContext, 
 } from "../hooks";
 import { TemplateThemeModeContextType } from "../context";
-
+import { logout } from "../redux/actionCreators/authActions";
+import { RootState } from "../redux/store/store";
 
 const Navbar: FC = (): ReactElement => {
-  const theme = useTheme()
+  const theme = useTheme();
+  const navigate = useNavigate();
   const { broken } = useProSidebar();
   const { toggle } = useSidebar();
   const { menuTitle } = useSidebarSelectedMenuTitleContext();
   const { isDark } = useTemplateThemeModeContext() as TemplateThemeModeContextType;
+  const dispatch = useDispatch(); // Add this line to get the dispatch function
+  const user: any = useSelector(
+    (state: RootState) =>  state.auth.user 
+  )
+  let name = '';
+  if(user) {
+    name = user.name;
+  }
+  
 
   return (
       <Container maxWidth="xl">
@@ -80,10 +94,9 @@ const Navbar: FC = (): ReactElement => {
                   );
                 }}
               >
-                <MenuItem>Notification #1</MenuItem>
-                <MenuItem>Notification #2</MenuItem>
-                <MenuItem>Notification #3</MenuItem>
-                <MenuItem>Notification #4</MenuItem>
+                <MenuItem>通知 #1</MenuItem>
+                <MenuItem>通知 #1</MenuItem>
+                <MenuItem>通知 #1</MenuItem>
               </Select>
               <Divider orientation="vertical" flexItem sx={{py:0, my:0}}/>
               <Select id='navbarSelect'
@@ -95,9 +108,9 @@ const Navbar: FC = (): ReactElement => {
                       <>
                         <Typography mx='auto' my={0} py={0} 
                         color={isDark ? theme.palette.success.dark : theme.palette.success.light} 
-                        >Ali Sajadian</Typography>
+                        >{name}</Typography>
                         <Avatar sx={{ width:35, height:35, m:0, p:0}}
-                            src='https://avatars.githubusercontent.com/u/47317870?s=400&u=79da86747deb409779c3575c0da73d90ad65fe81&v=4'
+                            src='http://localhost:8000/upload/images/images.png'
                             alt='avatar'
                         />
                         {value}
@@ -106,8 +119,8 @@ const Navbar: FC = (): ReactElement => {
                   );
                 }}
               >
-                <MenuItem>Settings</MenuItem>
-                <MenuItem>Logout</MenuItem>
+                <MenuItem>私のプロフィール</MenuItem>
+                <MenuItem onClick={() => dispatch(logout(navigate))}>ログアウト</MenuItem>
               </Select>
             </Box>
           </Box>
@@ -117,13 +130,6 @@ const Navbar: FC = (): ReactElement => {
 };
 
 export default Navbar;
-
-
-
-
-
-
-
 
       // {/* <ConsoleLog title={'navbarSelect height'} message={document.getElementById("navbarSelect")?.clientHeight.toString()}/> */}
 
