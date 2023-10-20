@@ -1,7 +1,6 @@
 import { FC, ReactElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import {
   Container,
   IconButton,
@@ -26,6 +25,14 @@ import {
 import { TemplateThemeModeContextType } from "../context";
 import { logout } from "../redux/actionCreators/authActions";
 import { RootState } from "../redux/store/store";
+import { useCookies, withCookies } from 'react-cookie';
+import jwtDecode from "jwt-decode";
+
+interface IUser {
+  name: string,
+  user_id?: string | null,
+  role_id?: string | null,
+}
 
 const Navbar: FC = (): ReactElement => {
   const theme = useTheme();
@@ -35,14 +42,16 @@ const Navbar: FC = (): ReactElement => {
   const { menuTitle } = useSidebarSelectedMenuTitleContext();
   const { isDark } = useTemplateThemeModeContext() as TemplateThemeModeContextType;
   const dispatch = useDispatch(); // Add this line to get the dispatch function
-  const user: any = useSelector(
-    (state: RootState) =>  state.auth.user 
-  )
+
+  const [cookies, setCookie, removeCookie] = useCookies(['usertoken']);
+  const usertoken = cookies.usertoken;
+    
   let name = '';
-  if(user) {
-    name = user.name;
+  if(usertoken) {
+    console.log(usertoken)
+    const user:IUser = jwtDecode(usertoken);
+    name = user ? user.name : '';
   }
-  
 
   return (
       <Container maxWidth="xl">
@@ -110,7 +119,7 @@ const Navbar: FC = (): ReactElement => {
                         color={isDark ? theme.palette.success.dark : theme.palette.success.light} 
                         >{name}</Typography>
                         <Avatar sx={{ width:35, height:35, m:0, p:0}}
-                            src='http://localhost:8000/upload/images/images.png'
+                            src='http://localhost:8000/api/images/128.png'
                             alt='avatar'
                         />
                         {value}
@@ -120,7 +129,7 @@ const Navbar: FC = (): ReactElement => {
                 }}
               >
                 <MenuItem>私のプロフィール</MenuItem>
-                <MenuItem onClick={() => dispatch(logout(navigate))}>ログアウト</MenuItem>
+                <MenuItem onClick={() => dispatch(logout(navigate, removeCookie))}>ログアウト</MenuItem>
               </Select>
             </Box>
           </Box>

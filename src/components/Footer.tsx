@@ -21,7 +21,7 @@ export const Footer: FC = (): ReactElement => {
             <Typography 
             color={ isDark ? theme.palette.success.dark : theme.palette.success.light} 
             variant="subtitle2">
-              {`${new Date().getFullYear()} | React | Typescript | Material UI | React Redux`}
+              {/* {`${new Date().getFullYear()} | React | Typescript | Material UI | React Redux`} */}
             </Typography>
           </Grid>
         </Grid>

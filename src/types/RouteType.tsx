@@ -1,3 +1,4 @@
+import { type } from "os";
 import { ComponentClass, FC } from "react";
 
 export interface IRoute {
@@ -7,4 +8,5 @@ export interface IRoute {
     enabled: boolean,
     component: ComponentClass | FC
     children?: IRoute | undefined;
+    permission? : number 
 }

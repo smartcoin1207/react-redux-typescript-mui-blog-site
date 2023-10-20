@@ -1,6 +1,8 @@
 import { createTheme } from "@mui/material/styles";
 import { blue, green, purple, } from "@mui/material/colors";
-
+import "@fontsource/noto-sans-jp"; // Defaults to weight 400
+import "@fontsource/noto-sans-jp/400.css"; // Specify weight
+// import "@fontsource/noto-sans-jp/400-italic.css"; // Specify weight and style
 export const theme = createTheme({
     components: {
       MuiCssBaseline: {
@@ -67,9 +69,17 @@ export const theme = createTheme({
         black: '#000000',
         white: '#ffffff',
       },
+      
     },
     shape: {
       borderRadius: 15, // Adjust the value as per your preference
     },
+    typography: {
+      fontFamily: 'Noto Sans JP, Arial, sans-serif', // Set the Japanese font as the first option
+      
+    },
+    // typography: {
+    //   fontFamily: "Noto Sans JP", // Set the Japanese font as the first option
+    // },
   });
 

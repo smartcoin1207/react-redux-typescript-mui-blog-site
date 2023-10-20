@@ -1,18 +1,36 @@
 // import { Dashboard } from "@mui/icons-material";
 import async from "../components/Async";
-import BlogList from "../pages/blogs/BlogList";
-import CreateBlog from "../pages/blogs/CreateBlog";
-import EditBlog from "../pages/blogs/EditBlog";
-import CreateGenre from "../pages/genres/CreateGenre";
-import EditGenre from "../pages/genres/EditGenre";
-import GenreList from "../pages/genres/GenreList";
-import CreateStep from "../pages/steps/CreateStep";
-import EditStep from "../pages/steps/EditStep";
-import StepList from "../pages/steps/StepList";
-import CreateUser from "../pages/users/CreateUser";
-import EditUser from "../pages/users/EditUser";
-import UserList from "../pages/users/UserList";
+// import BlogList from "../pages/blogs/BlogList";
+// import CreateBlog from "../pages/blogs/CreateBlog";
+// import EditBlog from "../pages/blogs/EditBlog";
+// import CreateGenre from "../pages/genres/CreateGenre";
+// import EditGenre from "../pages/genres/EditGenre";
+// import GenreList from "../pages/genres/GenreList";
+// import CreateStep from "../pages/steps/CreateStep";
+// import EditStep from "../pages/steps/EditStep";
+// import StepList from "../pages/steps/StepList";
+// import CreateUser from "../pages/users/CreateUser";
+// import EditUser from "../pages/users/EditUser";
+// import UserList from "../pages/users/EditUser";
 import { IRoute } from "../types/RouteType";
+
+
+const CreateUser = async(() => import("../pages/users/CreateUser"));
+const EditUser = async(() => import("../pages/users/EditUser"));
+const UserList = async(() => import("../pages/users/EditUser"));
+
+const CreateStep = async(() => import("../pages/steps/CreateStep"));
+const EditStep = async(() => import("../pages/steps/EditStep"));
+const StepList = async(() => import("../pages/steps/StepList"));
+
+const CreateGenre = async(() => import("../pages/genres/CreateGenre"));
+const EditGenre = async(() => import("../pages/genres/EditGenre"));
+const GenreList = async(() => import("../pages/genres/GenreList"));
+
+const CreateBlog = async(() => import("../pages/blogs/CreateBlog"));
+const EditBlog = async(() => import("../pages/blogs/EditBlog"));
+const BlogList = async(() => import("../pages/blogs/BlogList"));
+
 
 const Dashboard = async(() => import("../pages/dashboard/Dashboard"));
 const About = async(() => import("../pages/About"));
@@ -56,7 +74,7 @@ const UserGroup = async(
   () => import("../pages/security/authorization/userGroup")
 );
 
-export const routes: Array<IRoute> = [
+export const default_routes: Array<IRoute> = [
   {
     key: "dashboard-route",
     title: "Dashboard",
@@ -78,6 +96,10 @@ export const routes: Array<IRoute> = [
     enabled: true,
     component: Config,
   },
+];
+
+export const routes: Array<IRoute> = [
+
 
   //------------------User Management------------------
   {
@@ -85,6 +107,7 @@ export const routes: Array<IRoute> = [
     title: "ユーザーリスト",
     path: "user/index",
     enabled: true,
+    permission: 2,
     component: UserList,
   },
   {
@@ -92,13 +115,15 @@ export const routes: Array<IRoute> = [
     title: "ユーザーを追加する",
     path: "user/create",
     enabled: true,
+    permission: 2,
     component: CreateUser,
   },
   {
     key: "user-edit-route",
     title: "ユーザーの編集",
-    path: "user/edit/{id}",
+    path: "user/edit/:id",
     enabled: true,
+    permission: 2,
     component: EditUser,
   },
 
@@ -108,6 +133,7 @@ export const routes: Array<IRoute> = [
     title: "ステップリスト",
     path: "step/index",
     enabled: true,
+    permission: 2,
     component: StepList,
   },
   {
@@ -115,6 +141,7 @@ export const routes: Array<IRoute> = [
     title: "ステップの作成",
     path: "step/create",
     enabled: true,
+    permission: 2,
     component: CreateStep,
   },
   {
@@ -122,6 +149,7 @@ export const routes: Array<IRoute> = [
     title: "ステップを編集する",
     path: "step/edit/{id}",
     enabled: true,
+    permission: 2,
     component: EditStep,
   },
 
@@ -131,6 +159,7 @@ export const routes: Array<IRoute> = [
     title: "ジャンル一覧",
     path: "genre/index",
     enabled: true,
+    permission: 2,
     component: GenreList,
   },
   {
@@ -138,6 +167,7 @@ export const routes: Array<IRoute> = [
     title: "ジャンルを作成する",
     path: "genre/create",
     enabled: true,
+    permission: 2,
     component: CreateGenre,
   },
   {
@@ -145,6 +175,7 @@ export const routes: Array<IRoute> = [
     title: "ジャンルを編集する",
     path: "genre/edit/{id}",
     enabled: true,
+    permission: 2,
     component: EditGenre,
   },
 
@@ -154,6 +185,7 @@ export const routes: Array<IRoute> = [
     title: "ブログリスト",
     path: "blog/index",
     enabled: true,
+    permission: 2,
     component: BlogList,
   },
   {
@@ -161,6 +193,7 @@ export const routes: Array<IRoute> = [
     title: "ブログを作成する",
     path: "blog/create",
     enabled: true,
+    permission: 2,
     component: CreateBlog,
   },
   {
@@ -168,124 +201,10 @@ export const routes: Array<IRoute> = [
     title: "ブログを編集する",
     path: "blog/edit/{id}",
     enabled: true,
+    permission: 2,
     component: EditBlog,
   },
-  //------------------Base Info---------------------
-  {
-    key: "company-route",
-    title: "Company",
-    path: "baseinfo/company",
-    enabled: true,
-    component: Company,
-  },
-  {
-    key: "department-route",
-    title: "Department",
-    path: "baseinfo/department",
-    enabled: true,
-    component: Department,
-  },
-  {
-    key: "project-route",
-    title: "Project",
-    path: "baseinfo/project",
-    enabled: true,
-    component: Project,
-  },
-  {
-    key: "employee-route",
-    title: "Employee",
-    path: "baseinfo/employee",
-    enabled: true,
-    component: Employee,
-  },
-  {
-    key: "jobPosition-route",
-    title: "JobPosition",
-    path: "baseinfo/jobPosition",
-    enabled: true,
-    component: JobPosition,
-  },
-  //------------------Restaurant---------------------
-  {
-    key: "meal-route",
-    title: "Meal",
-    path: "restaurant/meal",
-    enabled: true,
-    component: Meal,
-  },
-  {
-    key: "mealssettingmonthly-route",
-    title: "MealsSettingMonthly",
-    path: "restaurant/mealssettingmonthly",
-    enabled: true,
-    component: MealsSetting_Monthly,
-  },
-  {
-    key: "mealsselection_currentmonth-route",
-    title: "MealsSelection_CurrentMonth",
-    path: "restaurant/mealsselectioncurrentmonth",
-    enabled: true,
-    component: MealsSelection_CurrentMonth,
-  },
-  {
-    key: "mealsselection_nextmonth-route",
-    title: "MealsSelection_NextMonth",
-    path: "restaurant/mealsselectionnextmonth",
-    enabled: true,
-    component: MealsSelection_NextMonth,
-  },
-  //-------------Security Authentication-------------
-  {
-    key: "changepassword-route",
-    title: "ChangePassword",
-    path: "auth/changepassword",
-    enabled: true,
-    component: ChangePassword,
-  },
-  {
-    key: "page404-route",
-    title: "Page404",
-    path: "*",
-    enabled: true,
-    component: Page404,
-  },
-  //-------------Security Authorization-------------
-  {
-    key: "group-route",
-    title: "Group",
-    path: "security/group",
-    enabled: true,
-    component: Group,
-  },
-  {
-    key: "grouppermission-route",
-    title: "GroupPermission",
-    path: "security/grouppermission",
-    enabled: true,
-    component: GroupPermission,
-  },
-  {
-    key: "permission-route",
-    title: "Permission",
-    path: "security/permission",
-    enabled: true,
-    component: Permission,
-  },
-  {
-    key: "user-route",
-    title: "User",
-    path: "security/user",
-    enabled: true,
-    component: User,
-  },
-  {
-    key: "usergroup-route",
-    title: "UserGroup",
-    path: "security/usergroup",
-    enabled: true,
-    component: UserGroup,
-  },
+  
 ];
 
 export const authRoutes: Array<IRoute> = [

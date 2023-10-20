@@ -2,15 +2,15 @@ import { Reducer } from 'redux';
 
 import { IAuth as Auth } from '../../models/auth';
 import { IUser } from '../../models/user';
-import { Action, ActionType } from '../actionTypes/authActionTypes';
-    
+import { Action, ActionType } from '../actionTypes/userActionTypes';
+
 
 export interface IAuthState {
     authToken : string ,
     isPasswordChanged: boolean,
     user : IUser | undefined | null;
     loading: boolean;
-    error? : any | null;
+    error? : string | null;
 }
 
 const initialState = {
@@ -21,15 +21,15 @@ const initialState = {
     error : null
 }
 
-export const AuthReducer: Reducer<IAuthState, Action> = (
+export const BlogReducer: Reducer<IAuthState, Action> = (
     state = initialState,
     action
 ) => {
     switch (action.type) {
-        case ActionType.AUTH_START:
+        case ActionType.GET_USER_PROFILE_START:
             return { ...state, loading: true };
 
-        case ActionType.AUTH_SUCCESS:
+        case ActionType.GET_USER_PROFILE_SUCCESS:
             const auth: Auth = action.payload
             return {
                 ...state,
@@ -38,21 +38,13 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
                 error : null , 
                 loading: false
             };
-        case ActionType.AUTH_FAIL:
-            // const err: any = action.payload ? action.payload : '';
+        case ActionType.GET_USER_PROFILE_FAIL:
             return {
                 ...state,
-                // error: err,
-                user: null,
+                error: action.payload,
                 loading: false
             };
-        case ActionType.AUTH_LOGOUT:
-            return {
-                ...state,
-                user: null,
-                loading: false,
-                authToken: ''
-            }
+
 
         default:
             return state;

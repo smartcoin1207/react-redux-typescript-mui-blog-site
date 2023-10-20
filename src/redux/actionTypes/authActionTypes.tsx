@@ -16,7 +16,7 @@ export interface IAuthSuccess {
 }
 export interface IAuthFail {
     type: ActionType.AUTH_FAIL;
-    payload: string | null;
+    // payload?: any | null;
 }
 
 export interface IAuthLogout {
@@ -28,4 +28,4 @@ export type Action =
     | IAuthStart
     | IAuthSuccess
     | IAuthFail
-    | IAuthLogout;
+    | IAuthLogout

@@ -63,7 +63,7 @@ export const color = {
 export const typography = {
   cardTitle: {
       fontWeight: 'bold',
-      fontSize: 19,
+      fontSize: 15,
       lineHeight: '24px',
       letterSpacing: '0.4px'
   },

@@ -18,7 +18,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
 
     const [rtl, setRtl] = useState<boolean>(false);
 
-    const [menuTitle, setMenuTitle] = useState<string>('Home');
+    const [menuTitle, setMenuTitle] = useState<string>('トップページ');
     return (
         <TemplateThemeModeContext.Provider value={{ isDark, toggleThemeMode }}>
             <TemplateDirectionContext.Provider value={{ rtl, setRtl }}>

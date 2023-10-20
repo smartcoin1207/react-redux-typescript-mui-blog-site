@@ -1,7 +1,7 @@
 import React, { ReactElement, FC, useState, useRef } from "react";
 import { useDispatch } from 'react-redux';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
+import { useCookies } from "react-cookie";
 import {
   Box,
   FormControl,
@@ -28,6 +28,7 @@ import {
 import { Formik, FormikProps, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { AuthStart } from "../../../redux/actionCreators/authActions";
+import { remove } from "lodash";
 
 const theme = createTheme({
   components: {
@@ -43,8 +44,9 @@ const theme = createTheme({
 
 const SignIn: FC = (): ReactElement => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const [cookies, setCookie, removeCookie] = useCookies(['token']);
+  removeCookie("token");
   const dispatch = useDispatch(); // Add this line to get the dispatch function
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -61,7 +63,7 @@ const SignIn: FC = (): ReactElement => {
     userId: "",
     password: "",
   };
-
+  
   const validationSchema = Yup.object({
     userId: Yup.string().required("ユーザーIDを入力してください"),
     password: Yup.string().required("パスワードを入力してください"),
