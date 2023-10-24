@@ -117,7 +117,7 @@ const UserList: FC = (): ReactElement => {
                   />
                 </StyledTableCell>
 
-                <StyledTableCell component="th" scope="row">
+                <StyledTableCell align="center" component="th" scope="row">
                   {user.name}
                 </StyledTableCell>
                 <StyledTableCell align="center">{user.user_id}</StyledTableCell>
