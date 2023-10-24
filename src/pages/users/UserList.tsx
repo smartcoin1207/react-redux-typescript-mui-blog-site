@@ -84,14 +84,14 @@ const UserList: FC = (): ReactElement => {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell align="center">名前</StyledTableCell>
+              <StyledTableCell align="center">画像</StyledTableCell>
               <StyledTableCell align="center">名前</StyledTableCell>
               <StyledTableCell  align="center">ユーザーID</StyledTableCell>
-              <StyledTableCell align="center">名前の読み</StyledTableCell>
+              <StyledTableCell align="center">ふりがな</StyledTableCell>
               <StyledTableCell align="center">
-                電子メールアドレス
+                メールアドレス
               </StyledTableCell>
-              <StyledTableCell align="center">特権</StyledTableCell>
+              <StyledTableCell align="center">アカウント種別</StyledTableCell>
               <StyledTableCell align="center">グループ</StyledTableCell>
               <StyledTableCell align="center">編集</StyledTableCell>
               <StyledTableCell align="center">削除</StyledTableCell>
