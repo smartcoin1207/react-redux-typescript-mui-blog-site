@@ -85,8 +85,8 @@ const UserList: FC = (): ReactElement => {
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">画像</StyledTableCell>
-              <StyledTableCell align="center">名前</StyledTableCell>
               <StyledTableCell  align="center">ユーザーID</StyledTableCell>
+              <StyledTableCell align="center">名前</StyledTableCell>
               <StyledTableCell align="center">ふりがな</StyledTableCell>
               <StyledTableCell align="center">
                 メールアドレス
@@ -116,11 +116,11 @@ const UserList: FC = (): ReactElement => {
                     src={`${baseURL}images/${user.avatar}`}
                   />
                 </StyledTableCell>
+                <StyledTableCell align="center">{user.user_id}</StyledTableCell>
 
                 <StyledTableCell align="center" component="th" scope="row">
                   {user.name}
                 </StyledTableCell>
-                <StyledTableCell align="center">{user.user_id}</StyledTableCell>
 
                 <StyledTableCell align="center">
                   {user.read_name}
