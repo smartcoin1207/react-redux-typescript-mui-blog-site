@@ -174,7 +174,7 @@ const Dashboard: FC = (): ReactElement => {
 
               <Divider sx={{ mt: 1, mb: 1 }} />
               <ListItem sx={{ padding: 0, margin: 0 }}>
-                <ListItemText primary="• 平均寿命まで後 s" />
+                <ListItemText primary="• 平均寿命まで後 " />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>
                   {user?.average_life} 年
