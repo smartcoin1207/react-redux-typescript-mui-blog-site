@@ -1,59 +1,31 @@
-// import { Dashboard } from "@mui/icons-material";
 import async from "../components/Async";
-// import BlogList from "../pages/blogs/BlogList";
-// import CreateBlog from "../pages/blogs/CreateBlog";
-// import EditBlog from "../pages/blogs/EditBlog";
-// import CreateGenre from "../pages/genres/CreateGenre";
-// import EditGenre from "../pages/genres/EditGenre";
-// import GenreList from "../pages/genres/GenreList";
-// import CreateStep from "../pages/steps/CreateStep";
-// import EditStep from "../pages/steps/EditStep";
-// import StepList from "../pages/steps/StepList";
-// import CreateUser from "../pages/users/CreateUser";
-// import EditUser from "../pages/users/EditUser";
-// import UserList from "../pages/users/EditUser";
 import { IRoute } from "../types/RouteType";
-
 
 const CreateUser = async(() => import("../pages/users/CreateUser"));
 const EditUser = async(() => import("../pages/users/EditUser"));
-const UserList = async(() => import("../pages/users/EditUser"));
+const UserList = async(() => import("../pages/users/UserList"));
 
 const CreateStep = async(() => import("../pages/steps/CreateStep"));
 const EditStep = async(() => import("../pages/steps/EditStep"));
 const StepList = async(() => import("../pages/steps/StepList"));
 
 const CreateGenre = async(() => import("../pages/genres/CreateGenre"));
+const CreateGenreByLeader = async(() => import("../pages/genres/CreateGenreByLeader"));
+
 const EditGenre = async(() => import("../pages/genres/EditGenre"));
 const GenreList = async(() => import("../pages/genres/GenreList"));
 
 const CreateBlog = async(() => import("../pages/blogs/CreateBlog"));
+// const CreateBlog = async(() => import("../pages/blogs/CreateBlog"));
+
 const EditBlog = async(() => import("../pages/blogs/EditBlog"));
 const BlogList = async(() => import("../pages/blogs/BlogList"));
-
+const ShowBlog = async(() => import("../pages/blogs/ShowBlog"));
 
 const Dashboard = async(() => import("../pages/dashboard/Dashboard"));
 const About = async(() => import("../pages/About"));
 const Config = async(() => import("../pages/config"));
-const Company = async(() => import("../pages/baseInfo/company"));
-const Department = async(() => import("../pages/baseInfo/department"));
-const Employee = async(() => import("../pages/baseInfo/employee"));
-const JobPosition = async(() => import("../pages/baseInfo/jobPosition"));
-
-const Project = async(() => import("../pages/baseInfo/project"));
-const Meal = async(() => import("../pages/restaurant/admin/meal"));
-const MealsSetting_Monthly = async(
-  () => import("../pages/restaurant/admin/mealsSetting_Monthly")
-);
-const MealsSelection_CurrentMonth = async(
-  () => import("../pages/restaurant/users/mealsSelection_CurrentMonth")
-);
-const MealsSelection_NextMonth = async(
-  () => import("../pages/restaurant/users/mealsSelection_NextMonth")
-);
-
 const SignIn = async(() => import("../pages/security/authentication/signIn"));
-const SignUp = async(() => import("../pages/security/authentication/signUp"));
 const ChangePassword = async(
   () => import("../pages/security/authentication/changePassword")
 );
@@ -61,18 +33,6 @@ const ForgetPassword = async(
   () => import("../pages/security/authentication/forgetPassword")
 );
 const Page404 = async(() => import("../pages/security/authentication/Page404"));
-
-const Group = async(() => import("../pages/security/authorization/group"));
-const GroupPermission = async(
-  () => import("../pages/security/authorization/groupPermission")
-);
-const Permission = async(
-  () => import("../pages/security/authorization/permission")
-);
-const User = async(() => import("../pages/security/authorization/user"));
-const UserGroup = async(
-  () => import("../pages/security/authorization/userGroup")
-);
 
 export const default_routes: Array<IRoute> = [
   {
@@ -127,6 +87,34 @@ export const routes: Array<IRoute> = [
     component: EditUser,
   },
 
+
+    //------------------User Management------------------
+    {
+      key: "leader-list-route",
+      title: "ユーザーリスト",
+      path: "leader/index",
+      enabled: true,
+      permission: 1,
+      component: UserList,
+    },
+    {
+      key: "leader-create-route",
+      title: "ユーザーを追加する",
+      path: "leader/create",
+      enabled: true,
+      permission: 1,
+      component: CreateUser,
+    },
+    {
+      key: "leader-edit-route",
+      title: "ユーザーの編集",
+      path: "leader/edit/:id",
+      enabled: true,
+      permission: 1,
+      component: EditUser,
+    },
+  
+
   //------------------Step Management------------------
   {
     key: "step-list-route",
@@ -138,7 +126,7 @@ export const routes: Array<IRoute> = [
   },
   {
     key: "step-create-route",
-    title: "ステップの作成",
+    title: "ステップを作成する",
     path: "step/create",
     enabled: true,
     permission: 2,
@@ -165,11 +153,21 @@ export const routes: Array<IRoute> = [
   {
     key: "genre-create-route",
     title: "ジャンルを作成する",
-    path: "genre/create",
+    path: "genre/admin/create",
+    enabled: true,
+    permission: 1,
+    component: CreateGenre,
+  },  
+
+  {
+    key: "genre-create-route",
+    title: "ジャンルを作成する",
+    path: "genre/leader/create",
     enabled: true,
     permission: 2,
-    component: CreateGenre,
-  },
+    component: CreateGenreByLeader,
+  },  
+
   {
     key: "genre-edit-route",
     title: "ジャンルを編集する",
@@ -185,7 +183,7 @@ export const routes: Array<IRoute> = [
     title: "ブログリスト",
     path: "blog/index",
     enabled: true,
-    permission: 2,
+    permission: 3,
     component: BlogList,
   },
   {
@@ -204,7 +202,16 @@ export const routes: Array<IRoute> = [
     permission: 2,
     component: EditBlog,
   },
-  
+
+  {
+    key: "leader-edit-route",
+    title: "ユーザーの編集",
+    path: "blog/show/:id",
+    enabled: true,
+    permission: 3,
+    component: ShowBlog,
+  },
+
 ];
 
 export const authRoutes: Array<IRoute> = [

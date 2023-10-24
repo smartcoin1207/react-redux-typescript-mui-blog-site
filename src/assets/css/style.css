@@ -1,6 +1,34 @@
 #edit-avatar-icon {
     color: #ffffff00;
 }
+
 #edit-avatar-icon:hover {
     color: rgba(3, 3, 3, 0.388);
+}
+
+.animate-height {
+    transition: height 0.3s ease-in-out;
+}
+
+.show {
+    height: auto;
+    opacity: 1;
+}
+
+.hide {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.ps-submenu-expand-icon {
+    display: none;
+}
+
+.css-z3c6am-MuiFormControl-root-MuiTextField-root   {
+    width: 100%;
+}
+
+.css-z3c6am-MuiFormControl-root-MuiTextField-root input   {
+    font-size: 1.1rem;
 }

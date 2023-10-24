@@ -2,15 +2,19 @@ import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactElement, FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { GetUsers } from '../../redux/actionCreators/userActions';
+import { RootState } from "../../redux/store/store";
+import { ThemeColor } from "../../styles/GlobalStyle";
 function createData(
   name: string,
   calories: number,
@@ -20,6 +24,26 @@ function createData(
 ) {
   return { name, calories, fat, carbs, protein };
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: ThemeColor.main800,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
 
 const rows = [
   createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
@@ -33,41 +57,58 @@ const UserList: FC = (): ReactElement => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const users = useSelector((state: RootState) => state.users.users);
+
 
   useEffect (()=> {
     dispatch(GetUsers(navigate));
   },[])
 
   return (
+    <Box sx={{width: '90%'}}>
+      <Typography sx={{fontSize: '2rem', mt: 4, mb:4,  color: ThemeColor.main, fontWeight: '600'}} variant="h4">ユーザーリスト</Typography>
+
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table aria-label="customized table">
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <StyledTableCell>名前</StyledTableCell>
+            <StyledTableCell>ユーザーID</StyledTableCell>
+
+            <StyledTableCell align="center">名前の読み</StyledTableCell>
+            <StyledTableCell align="center">電子メールアドレス</StyledTableCell>
+            <StyledTableCell align="center">特権</StyledTableCell>
+
+            <StyledTableCell align="center">グループ</StyledTableCell>
+            <StyledTableCell align="center">編集</StyledTableCell>
+            <StyledTableCell align="center">削除</StyledTableCell>
+            
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
-            </TableRow>
+          {users?.map((user: any) => (
+            <StyledTableRow key={user.id} sx={{backgroundColor: '#35485b45'}}>
+
+              <StyledTableCell component="th" scope="row">
+                {user.name}
+              </StyledTableCell>
+              <StyledTableCell align="center">{user.user_id}</StyledTableCell>
+
+              <StyledTableCell align="center">{user.read_name}</StyledTableCell>
+              <StyledTableCell align="center">{user.email}</StyledTableCell>
+              <StyledTableCell align="center">{user.role_id == 2 ? 'チームリーダー' : 'ユーザー'}</StyledTableCell>
+
+              <StyledTableCell align="center">{user.group?.name}</StyledTableCell>
+              <StyledTableCell align="center"><Button variant="outlined" color="success" >編集</Button></StyledTableCell>
+              <StyledTableCell align="center"><Button variant="outlined" color="error">削除</Button></StyledTableCell>
+
+            </StyledTableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
+
   );
 }
 

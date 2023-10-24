@@ -4,7 +4,7 @@ import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
 import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
-import { UserProfile } from "../../redux/actionCreators/userActions";
+import { UserProfile } from "../../redux/actionCreators/authActions";
 import { RootState } from "../../redux/store/store";
 import { IUser } from "../../models/user";
 import {
@@ -19,9 +19,13 @@ import {
   CardHeader,
   Grid,
   Button,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { blue, red } from "@mui/material/colors";
 import { Padding } from "@mui/icons-material";
+import { ThemeColor, theme } from "../../styles/GlobalStyle";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode !== "dark" ? "whitesmoke" : "#fff",
@@ -58,9 +62,6 @@ const Dashboard: FC = (): ReactElement => {
   const user: any | null | undefined = useSelector(
     (state: RootState) => state.auth.user
   );
-  // const new_blogs: any | null | undefined = useSelector(
-  //   (state: RootState) => state.auth.new_blogs
-  // );
 
   const [profile, setProfile] = useState({});
 
@@ -73,10 +74,6 @@ const Dashboard: FC = (): ReactElement => {
   const [average_life, setAverage_life] = useState("");
 
   useEffect(() => {
-    dispatch(UserProfile());
-  }, [dispatch]);
-
-  useEffect(() => {
     // const ss = user?.name
     setName(user?.name);
   }, [user]);
@@ -84,82 +81,161 @@ const Dashboard: FC = (): ReactElement => {
   // const theme = useTheme();  // sx={{[theme.breakpoints.down('sm')]: {display:'flex', flexDirection:'column', justifyContent:'center'}}}
 
   return (
-    <Box sx={{ padding: "10px"}}>
+    <Box
+      sx={{
+        width: { xs: "100%", ms: "80%", md: "80%", lg: "80%" },
+        padding: "10px",
+      }}
+    >
       <Typography
         sx={{ textAlign: "center", fontWeight: "bold", my: "1rem" }}
         variant="h4"
       >
-        <div style={{ color: "#2196f3", display: "inline-block" }}>
-          ようこそ
-        </div>{" "}
-        {name} さん ID: {user?.user_id}
+        ようこそ{"   "}
+        <div style={{ color: ThemeColor.main, display: "inline-block" }}>
+          {name} さん
+        </div>
+        ID: {user?.user_id}
       </Typography>
       <Divider orientation="horizontal" />
-      <Typography sx={{ paddingTop: "20px", textAlign: "left" }} variant="h5">
-        ■あなたが閲覧できるグループは
-      </Typography>
-      <Stack
-        direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
-        spacing={3}
-      >
-        <>Aグループ</>
-        <>Bグループ</>
-      </Stack>
+
+      <Box sx={{ pl: 2 }}>
+        <Typography
+          sx={{
+            color: ThemeColor.main,
+            paddingTop: "20px",
+            mb: 2,
+            textAlign: "left",
+            fontSize: "1.5rem",
+          }}
+          variant="h5"
+        >
+          あなたが閲覧できるグループは
+        </Typography>
+        <Stack
+          direction="row"
+          divider={<Divider orientation="vertical" flexItem />}
+          spacing={3}
+        >
+          <>Aグループ</>
+          <>Bグループ</>
+        </Stack>
+      </Box>
+
       <Box>
-        <Card sx={{ marginTop: "20px" }}>
+        <Card
+          sx={{
+            mb: 4,
+            mt: 4,
+            // border: "solid 1px #2196f3",
+          }}
+        >
           <CardHeader
             title="あなたに残された人生は後"
-            sx={{ backgroundColor: "#2196f3", color: "white" }}
+            sx={{ color: ThemeColor.main }}
           />
-          <Divider />
+          <Divider orientation="horizontal"/>
 
           <CardContent>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 人生の9割が確定(30歳)まで {user?.ninetieth_life}年
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 労働寿命まで後 {user?.work_life}年
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 死んでいるかもしれない日まで {user?.die_life}年
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 健康寿命まで後 {user?.healthy_life}年
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 平均寿命まで後 {user?.average_life}年
-            </Typography>
+            {/* <FormControl> */}
+            <List>
+              <ListItem sx={{ padding: 0, margin: 0 }}>
+                <ListItemText primary="• 人生の9割が確定(30歳)まで" />
+
+                <Typography variant="h6" sx={{ pl: 1 }}>
+                  {user?.ninetieth_life} 年
+                </Typography>
+              </ListItem>
+              <Divider sx={{ mt: 1, mb: 1 }} />
+              <ListItem sx={{ padding: 0, margin: 0 }}>
+                <ListItemText primary="• 労働寿命まで後" />
+                <Typography variant="h6" sx={{ pl: 1 }}>
+                  {user?.work_life} 年
+                </Typography>
+              </ListItem>
+
+              <Divider sx={{ mt: 1, mb: 1 }} />
+              <ListItem sx={{ padding: 0, margin: 0 }}>
+                <ListItemText primary="• 死んでいるかもしれない日まで " />
+
+                <Typography variant="h6" sx={{ pl: 1 }}>
+                  {user?.die_life} 年
+                </Typography>
+              </ListItem>
+
+              <Divider sx={{ mt: 1, mb: 1 }} />
+              <ListItem sx={{ padding: 0, margin: 0 }}>
+                <ListItemText primary="• 健康寿命まで後" />
+
+                <Typography variant="h6" sx={{ pl: 1 }}>
+                  {user?.healthy_life} 年
+                </Typography>
+              </ListItem>
+
+              <Divider sx={{ mt: 1, mb: 1 }} />
+              <ListItem sx={{ padding: 0, margin: 0 }}>
+                <ListItemText primary="• 平均寿命まで後 s" />
+
+                <Typography variant="h6" sx={{ pl: 1 }}>
+                  {user?.average_life} 年
+                </Typography>
+              </ListItem>
+              <Divider sx={{ mt: 1, mb: 1 }} />
+            </List>
+
+            {/* </FormControl> */}
           </CardContent>
         </Card>
       </Box>
 
       <Box sx={{ marginTop: "20px" }}>
         <Grid container columnSpacing={1}>
-          <Grid item xs={8}>
+          <Grid item xs={10}>
             <TextField
               id="title-search"
               label="タイトル検索"
               type="search"
-              sx={{ borderRadius: "15px", padding: "10px" }}
+              size="small"
+              sx={{
+                borderRadius: "15px",
+                padding: "10px",
+                width: {
+                  md: "50%",
+                  xs: "100%",
+                  "& .MuiInputLabel-root": {
+                    top: "10%",
+                  },
+                },
+              }}
               variant="outlined"
             />
             <TextField
               id="content-search"
-              label="本文索"
+              label="本文検索"
               type="search"
-              sx={{ borderRadius: "15px", padding: "10px" }}
+              size="small"
+              sx={{
+                borderRadius: "15px",
+                padding: "10px",
+                width: { md: "50%", xs: "100%" },
+                "& .MuiInputLabel-root": {
+                  top: "10%",
+                },
+              }}
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2} sx={{ margin: "auto" }}>
             <Button
               variant="contained"
+              size="small"
               sx={{
-                borderRadius: "15px",
+                borderRadius: "5px",
                 display: "flex",
                 alignItems: "center",
-                padding: "15px",
+                // padding: "15px",
+                margin: "auto",
+                fontSize: "1.5rem",
               }}
             >
               検索
@@ -171,7 +247,8 @@ const Dashboard: FC = (): ReactElement => {
         <Card sx={{ marginTop: "20px" }}>
           <CardHeader
             title="新着記事一覧"
-            sx={{ backgroundColor: "#2196f3", color: "white" }}
+            // sx={{ backgroundColor: ThemeColor.main, color: "white" }}
+            sx={{ color: ThemeColor.main }}
           />
           <Divider />
           <CardContent>

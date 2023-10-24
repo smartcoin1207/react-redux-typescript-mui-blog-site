@@ -4,6 +4,8 @@ import { AxiosResponse } from "axios";
 import axios from "../../services/axios";
 import { IAuth as Auth } from "../../models/auth";
 import { ThunkResult } from "./actionResultTypes";
+import { ToastMessage } from "../../util/toast";
+import { removeToken, removeUserToken, setToken, setUserToken } from "../../util/util";
 import {
   Action,
   ActionType,
@@ -12,18 +14,10 @@ import {
   IAuthStart,
   IAuthSuccess,
 } from "../actionTypes/authActionTypes";
-import { RootState } from "../store/store";
-import { remove } from "lodash";
 
 // Headers
 type Config = {
   headers: Record<string, string>;
-};
-
-const saveToken = (token: string, usertoken: any) => {
-  const cookies = new Cookies();
-  cookies.set("token", token, { path: "/" });
-  cookies.set("usertoken", usertoken, {path: "/"});
 };
 
 export const AuthStart =
@@ -47,16 +41,37 @@ export const AuthStart =
         body,
         config
       );
-      // Save the token to a cookie using react-cookie
+
       const token = response.data.access_token;
       const usertoken = response.data.user_token;
-      saveToken(token, usertoken);
+      
+      setToken(token);
+      setUserToken(usertoken);
 
       dispatch<IAuthSuccess>({
         type: ActionType.AUTH_SUCCESS,
         payload: response.data,
       });
     } catch (err: any) {
+      ToastMessage(err.response);
+      dispatch<IAuthFail>({
+        type: ActionType.AUTH_FAIL,
+      });
+    }
+  };
+
+  export const UserProfile = (): any => async (dispatch: Dispatch<Action>) => {
+    dispatch<IAuthStart>({ type: ActionType.AUTH_START });
+  
+    try {
+      const response: AxiosResponse<Auth> = await axios.get(`/auth/user-profile`);
+  
+      dispatch<IAuthSuccess>({
+        type: ActionType.AUTH_SUCCESS,
+        payload: response.data,
+      });
+    } catch (err: any) {
+      ToastMessage(err.response);
       dispatch<IAuthFail>({
         type: ActionType.AUTH_FAIL,
       });
@@ -64,12 +79,11 @@ export const AuthStart =
   };
 
   // Logout action
-export const logout = (navigate: any, removeCookie: any): any => {
-    console.log(removeCookie);
+export const logout = (navigate: any): any => {
     
     return (dispatch: Dispatch<Action>) => {
-      removeCookie('token');
-      removeCookie('usertoken');
+      removeToken();
+      removeUserToken();
       navigate('/');
 
       dispatch<IAuthLogout>({

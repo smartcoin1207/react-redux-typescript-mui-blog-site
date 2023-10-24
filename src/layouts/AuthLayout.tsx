@@ -10,15 +10,10 @@ const AuthLayout: FC<AuthLayoutProps> = ({ children }) => {
   return (
     <Grid 
       container 
-      height='100vh'
       width='100%'
-      sx={{ backgroundSize:'cover'}}
+      sx={{ height: {xs: '80vh', ms: '100vh', md: '100vh'}, backgroundSize:'cover'}}
     >
-      <Grid item width='33%' />
-      <Grid item width='34%' display='flex' justifyContent='center' >
         {children}
-      </Grid>
-      <Grid item width='33%' />
     </Grid>
   )
 };

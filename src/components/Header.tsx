@@ -20,7 +20,7 @@ export const Header: FC = (): ReactElement => {
       }}
     >
       <Container maxWidth="lg">
-        <Grid container direction="column" alignItems="left">
+        <Grid>
           <Grid item xs={12}>
             <Navbar />
           </Grid>

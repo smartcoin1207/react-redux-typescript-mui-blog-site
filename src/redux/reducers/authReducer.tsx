@@ -6,7 +6,7 @@ import { Action, ActionType } from '../actionTypes/authActionTypes';
     
 
 export interface IAuthState {
-    authToken : string ,
+    authToken : boolean ,
     isPasswordChanged: boolean,
     user : IUser | undefined | null;
     loading: boolean;
@@ -14,7 +14,7 @@ export interface IAuthState {
 }
 
 const initialState = {
-    authToken : "" ,
+    authToken : false ,
     isPasswordChanged: false,
     user : null , 
     loading: false,
@@ -33,16 +33,14 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
             const auth: Auth = action.payload
             return {
                 ...state,
-                authToken : 'loggedin' , 
+                authToken : true , 
                 user : auth.user ,
                 error : null , 
                 loading: false
             };
         case ActionType.AUTH_FAIL:
-            // const err: any = action.payload ? action.payload : '';
             return {
                 ...state,
-                // error: err,
                 user: null,
                 loading: false
             };
@@ -51,7 +49,7 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
                 ...state,
                 user: null,
                 loading: false,
-                authToken: ''
+                authToken: false
             }
 
         default:

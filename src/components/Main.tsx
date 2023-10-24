@@ -21,7 +21,7 @@ export const Main: FC<MainProps> = ({ children }): ReactElement => {
     >
       {children}
     </Box>
-  )
+  ) 
 }
 
 export default Main;

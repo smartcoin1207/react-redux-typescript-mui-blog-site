@@ -29,6 +29,7 @@ import { Formik, FormikProps, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { AuthStart } from "../../../redux/actionCreators/authActions";
 import { remove } from "lodash";
+import { ThemeColor } from "../../../styles/GlobalStyle";
 
 const theme = createTheme({
   components: {
@@ -44,8 +45,7 @@ const theme = createTheme({
 
 const SignIn: FC = (): ReactElement => {
   const [showPassword, setShowPassword] = React.useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['token']);
-  removeCookie("token");
+
   const dispatch = useDispatch(); // Add this line to get the dispatch function
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
@@ -71,7 +71,6 @@ const SignIn: FC = (): ReactElement => {
 
   const handleSubmit = (values: values) => {
     dispatch(AuthStart(values.userId, values.password)); 
-    console.log(values);
   };
 
   return (
@@ -79,25 +78,27 @@ const SignIn: FC = (): ReactElement => {
       display="block"
       m="auto"
       px={3}
-      pt={3}
-      width={400}
+      // pt={3}
+      width={500}
       borderRadius={4}
-      boxShadow={12}
-      sx={{ backgroundColor: "#ffffff" }}
+      // boxShadow={md: 12, xs:}
+      
+      
+      sx={{ boxShadow: {xs: 0, md: 12, ms:12}, backgroundColor: "#ffffff" }}
     >
       <Box
         flexGrow={1}
         display="flex"
         py={2}
-        px={3}
+        px={2}
         sx={{
           justifyContent: "center",
           backgroundColor: "inherit",
         }}
       >
-        <Typography variant="h6">ログイン</Typography>
+        <Typography sx={{fontSize: '2rem', color: ThemeColor.main, fontWeight: '600'}} variant="h4">ログイン</Typography>
       </Box>
-      <Box display="block" px={3} mb={3}>
+      <Box display="block" px={2} mb={2}>
         <ThemeProvider theme={theme}>
           <Formik
             initialValues={initialValues}
@@ -110,22 +111,25 @@ const SignIn: FC = (): ReactElement => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  sx={{ fontSize: { xs: "9pt", sm: "9pt", md: "10pt" } }}
+                  sx={{mt: 2, fontSize: { xs: "9pt", sm: "9pt", md: "10pt" } }}
                 >
-                  <InputLabel
+                  {/* <InputLabel
                     htmlFor="outlined-input-user-id"
                     sx={{ fontSize: { xs: "9pt", sm: "10pt", md: "11pt" } }}
                   >
                     ユーザーID
-                  </InputLabel>
+                  </InputLabel> */}
+                  <Typography sx={{fontSize: '1.1rem',mb: 1,ml: 1,  fontWeight: '600'}} variant="h4">ログイン</Typography>
+
                   <Field
                     as={OutlinedInput}
                     id="outlined-input-user-id"
                     type="text"
+                    placeholder="ユーザーID"
+                    sx={{fontSize: '1.2rem'}}
                     name="userId"
                     value={formikProps.values.userId} // Update the 'value' attribute
                     aria-describedby="my-helper-text"
-                    label="ユーザーID"
                   />
                   {!!formikProps.touched.userId &&
                     !!formikProps.errors.userId && ( // New conditional render
@@ -141,19 +145,17 @@ const SignIn: FC = (): ReactElement => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  sx={{ fontSize: { xs: "9pt", sm: "9pt", md: "10pt" } }}
+                  sx={{ mt: 4,mb: 4,  fontSize: { xs: "9pt", sm: "9pt", md: "10pt" } }}
                 >
-                  <InputLabel
-                    htmlFor="outlined-adornment-password"
-                    sx={{ fontSize: { xs: "9pt", sm: "10pt", md: "11pt" } }}
-                  >
-                    パスワード
-                  </InputLabel>
+                  <Typography sx={{fontSize: '1.1rem',mb: 1,  fontWeight: '600'}} variant="h4">パスワード</Typography>
+
                   <Field
                     as={OutlinedInput}
                     id="outlined-adornment-password"
                     type={showPassword ? "text" : "password"}
                     name="password"
+                    placeholder="パスワード"
+                    sx={{fontSize: '1.2rem'}}
                     value={formikProps.values.password} // Update the 'value' attribute
                     endAdornment={
                       <InputAdornment position="end">
@@ -167,7 +169,8 @@ const SignIn: FC = (): ReactElement => {
                         </IconButton>
                       </InputAdornment>
                     }
-                    label="パスワード"
+                    
+                    // label="パスワード"
                   />
                   {!!formikProps.touched.password &&
                     !!formikProps.errors.password && ( // New conditional render
@@ -176,34 +179,7 @@ const SignIn: FC = (): ReactElement => {
                       </FormHelperText>
                     )}
                 </FormControl>
-                <Box
-                  display="flex"
-                  justifyContent="space-around"
-                  pt={1}
-                  flexGrow={1}
-                  sx={{ backgroundColor: "inherit" }}
-                >
-                  <FormControlLabel
-                    sx={{
-                      "& .MuiFormControlLabel-label": {
-                        fontSize: { xs: "9pt", sm: "9pt", md: "10pt" },
-                      },
-                    }}
-                    control={<Checkbox size="small" />}
-                    label={"次回から自動的にログインする"}
-                  />
-                  <Link
-                    href="/auth/forgetpassword"
-                    sx={{
-                      mt: 1,
-                      fontSize: { xs: "9pt", sm: "9pt", md: "10pt" },
-                      textDecoration: "none",
-                      fontColor: "black",
-                    }}
-                  >
-                    パスワードを忘れましたか?
-                  </Link>
-                </Box>
+           
                 <Box display="block" justifyContent="center" py={2}>
                   <Button
                     fullWidth
@@ -211,8 +187,7 @@ const SignIn: FC = (): ReactElement => {
                     color="primary"
                     size="small"
                     type="submit"
-                    // onClick={()=>{handleOnSubmit()}}
-                    sx={{ fontSize: { xs: "9pt", sm: "9pt", md: "10pt" } }}
+                    sx={{ fontSize: { xs: "1.1rem", sm: "1.1rem", md: "1.3rem" } }}
                   >
                     ログインする
                   </Button>
@@ -221,16 +196,6 @@ const SignIn: FC = (): ReactElement => {
             )}
           </Formik>
         </ThemeProvider>
-
-        {/* <Divider sx={{pb:1, fontSize:{xs:'9pt', sm:'10pt', md:'11pt'}}}>でログイン</Divider> */}
-        {/* <Box 
-          display='flex'
-          justifyContent='center'
-        >
-          <Button sx={{fontSize:{xs:'8pt', sm:'8pt', md:'9pt'}}} variant="outlined" startIcon={<Google sx={{mr:0}}/>}>Google</Button>
-          <Button sx={{mx:1, fontSize:{xs:'8pt', sm:'8pt', md:'9pt'}}} variant="outlined" startIcon={<Twitter sx={{mr:0}}/>}>Twitter</Button>
-          <Button sx={{fontSize:{xs:'8pt', sm:'8pt', md:'9pt'}}} variant="outlined" startIcon={<Facebook sx={{mr:0}}/>}>Facebook</Button>
-        </Box> */}
       </Box>
     </Box>
   );

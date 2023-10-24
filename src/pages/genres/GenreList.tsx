@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 const GenreList: FC = (): ReactElement => {
   return (
     <div>
-        Genre List
+        {/* Genre List */}
     </div>
   );
 };

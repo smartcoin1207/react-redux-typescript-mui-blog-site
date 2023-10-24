@@ -1,3 +1,4 @@
+import { ICategory } from "./category";
 import { IUser } from "./user";
 
 export interface IAuth {
@@ -7,4 +8,9 @@ export interface IAuth {
     isPasswordChanged: boolean,
     user? : IUser;
     error? : string | null;
+}
+
+export interface IBasicData {
+    common_group_categories : ICategory[] | null
+    mygroup_categories : ICategory[] | null
 }

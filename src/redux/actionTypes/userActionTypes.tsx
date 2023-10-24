@@ -10,8 +10,15 @@ export enum ActionType {
     CREATE_USER_FAIL = 'CREATE_USER_FAIL',
 
     GET_USERS_START = 'GET_USERS_START',
-    GET_USERS_SUCCESS = 'CREATE_USERS_SUCCESS',
+    GET_USERS_SUCCESS = 'GET_USERS_SUCCESS',
     GET_USERS_FAIL = 'CREATE_USERS_FAIL',
+
+    GET_BASIC_CATEGORIES_SUCCESS = 'GET_BASIC_CATEGORIES_SUCCESS',
+    GET_ALL_GROUPS = 'GET_ALL_GROUPS',
+    GET_ALL_CATEGORIES  = 'GET_ALL_CATEGORIES',
+    GET_ALL_GENRES  = 'GET_ALL_GENRES',
+    GET_BLOGS  = 'GET_BLOGS',
+    GET_BLOG  = 'GET_BLOG',
 
 }
 
@@ -36,7 +43,7 @@ export interface ICreateUserSuccess {
 }
 export interface ICreateUserFail {
     type: ActionType.CREATE_USER_FAIL,
-    payload: string | null
+    // payload: string | null
 }
 
 export interface IGetUserStart {
@@ -48,7 +55,37 @@ export interface IGetUserSuccess {
 }
 export interface IGetUserFail {
     type: ActionType.GET_USERS_FAIL,
-    payload: string | null
+    // payload: string | null
+}
+
+export interface IGetBasicCategoriesSuccess {
+    type: ActionType.GET_BASIC_CATEGORIES_SUCCESS,
+    payload: any
+}
+
+export interface IGetAllGroups {
+    type: ActionType.GET_ALL_GROUPS,
+    payload: any
+}
+
+export interface IGetAllCategories {
+    type: ActionType.GET_ALL_CATEGORIES,
+    payload: any
+}
+
+export interface IGetAllGenres {
+    type: ActionType.GET_ALL_GENRES,
+    payload: any
+}
+
+export interface IGetBlogs {
+    type: ActionType.GET_BLOGS,
+    payload: any
+}
+
+export interface IGetBlog {
+    type: ActionType.GET_BLOG,
+    payload: any
 }
 
 export type Action = 
@@ -61,4 +98,10 @@ export type Action =
     | IGetUserStart 
     | IGetUserSuccess
     | IGetUserFail
+    | IGetBasicCategoriesSuccess
+    | IGetAllGroups
+    | IGetAllCategories
+    | IGetAllGenres
+    | IGetBlogs
+    | IGetBlog
 
