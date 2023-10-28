@@ -6,12 +6,14 @@ import "@fontsource/noto-sans-jp/400.css"; // Specify weight
 
 interface IColor {
   main: string,
-  main800: string
+  main800: string,
+  grey1: string
 }
 
 export const ThemeColor: IColor = {
   main: blue[700],
   main800: blue[900],
+  grey1 : '#f1f3f4'
 }
 
 // import "@fontsource/noto-sans-jp/400-italic.css"; // Specify weight and style

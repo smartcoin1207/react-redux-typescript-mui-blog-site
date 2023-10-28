@@ -1,15 +1,13 @@
 import { useEffect, useState, ReactElement, FC } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TreeView, TreeItem } from "@mui/x-tree-view";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { RootState } from "../../redux/store/store";
 import {
-  AddBlog,
-  getAllGenres,
-  getAllGroups,
-} from "../../redux/actionCreators/userActions";
+  AddBlog, getCurrentGenre, setCurrentPage,
+} from "../../redux/actionCreators/blogActions";
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -37,6 +35,8 @@ interface IUser {
 }
 
 const CreateBlog: FC = (): ReactElement => {
+  const {genre_id} = useParams();
+
   const dispatch = useDispatch();
   const allGenres = useSelector((state: RootState) => state.users.genres);
   const auth_user = useSelector((state: RootState) => state.auth.user);
@@ -54,59 +54,30 @@ const CreateBlog: FC = (): ReactElement => {
   const role: number = user?.role_id;
 
   useEffect(() => {
-    dispatch(getAllGenres());
-  }, []);
+    dispatch(getCurrentGenre(genre_id))
+  }, [])
 
+  
   useEffect(() => {
-    if (allGenres) {
-      if (auth_user) {
-        let steps: any = [];
-        allGenres.forEach((group: any) => {
-          if (group.id == auth_user.group_id) {
-            // alert(group.id)
-            steps = group.categories;
-            return;
-          }
-        });
-        setCategories(steps);
-        console.log(steps);
-      }
-    }
-  }, [allGenres]);
-
-  const handleSelect = (event: React.SyntheticEvent, nodeId: string) => {
-    const node: number = parseInt(nodeId);
-
-    if (node) {
-      setSelectedGenre(nodeId);
-    }
-  };
-
+    dispatch(setCurrentPage('genre'));
+  }, [])
+  
   const handleSubmit = (event: any) => {
     event.preventDefault();
 
-
-    if(!selectedGenre) {
-      toast.error("ジャンルを選択", {
-        autoClose: 1000 ,
-      });
-    } else{
       const newBlog = {
-        genre_id: selectedGenre,
+        genre_id: genre_id,
         title: title,
         content: content,
       };
   
       dispatch(AddBlog(navigate, newBlog));
-    }
-
-
   };
 
   return (
     <Box
       sx={{
-        width: "100%",
+        width: {xs: '100%', ms: '90%', md: '90%', lg: '80%'},
         padding: 4,
       }}
     >
@@ -123,66 +94,6 @@ const CreateBlog: FC = (): ReactElement => {
         ブログを作成する
       </Typography>
       <Divider orientation="horizontal" />
-
-      <Card
-        sx={{
-          marginTop: "20px",
-          border: "solid 1px #2196f3",
-        }}
-      >
-        <CardHeader title="ジャンルを選択" sx={{ fontSize: "16px" }} />
-        <Divider sx={{ border: "1px dotted #2196f3" }} />
-
-        <CardContent>
-          <TreeView
-            aria-label="controlled"
-            defaultCollapseIcon={<ExpandMoreIcon />}
-            defaultExpandIcon={<ChevronRightIcon />}
-            onNodeSelect={handleSelect}
-          >
-            {role == 1 &&
-              allGenres?.map((group: any, index: number) => (
-                <TreeItem
-                  nodeId={"group" + group.id}
-                  sx={{ color: "#2e7d32" }}
-                  label={group.name + "(" + group.count + ")"}
-                >
-                  {group.categories?.map((category: any, index1: number) => (
-                    <TreeItem
-                      nodeId={"category" + category.id}
-                      sx={{ ml: 4, color: "#2979ff" }}
-                      label={category.name + "(" + category.count + ")"}
-                    >
-                      {category.genres?.map((genre: any, index2: number) => (
-                        <TreeItem
-                          nodeId={genre.id}
-                          sx={{ ml: 4, color: "black" }}
-                          label={genre.name + "(" + genre.count + ")"}
-                        />
-                      ))}
-                    </TreeItem>
-                  ))}
-                </TreeItem>
-              ))}
-            {role == 2 &&
-              categories?.map((category: any, index1: number) => (
-                <TreeItem
-                  nodeId={"category" + category.id}
-                  sx={{ ml: 4, color: "#2979ff" }}
-                  label={category.name}
-                >
-                  {category.genres?.map((genre: any, index2: number) => (
-                    <TreeItem
-                      nodeId={genre.id}
-                      sx={{ ml: 4, color: "black" }}
-                      label={genre.name}
-                    />
-                  ))}
-                </TreeItem>
-              ))}
-          </TreeView>
-        </CardContent>
-      </Card>
 
       <form onSubmit={handleSubmit}>
         <Box>

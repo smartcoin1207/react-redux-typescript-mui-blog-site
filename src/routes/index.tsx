@@ -19,7 +19,7 @@ const CreateBlog = async(() => import("../pages/blogs/CreateBlog"));
 // const CreateBlog = async(() => import("../pages/blogs/CreateBlog"));
 
 const EditBlog = async(() => import("../pages/blogs/EditBlog"));
-const BlogList = async(() => import("../pages/blogs/BlogList"));
+const BlogList1 = async(() => import("../pages/blogs/BlogList1"));
 const ShowBlog = async(() => import("../pages/blogs/ShowBlog"));
 
 const Dashboard = async(() => import("../pages/dashboard/Dashboard"));
@@ -119,9 +119,9 @@ export const routes: Array<IRoute> = [
   {
     key: "step-list-route",
     title: "ステップリスト",
-    path: "step/index",
+    path: "step/steps/:group_id",
     enabled: true,
-    permission: 2,
+    permission: 3,
     component: StepList,
   },
   {
@@ -145,9 +145,9 @@ export const routes: Array<IRoute> = [
   {
     key: "gemre-list-route",
     title: "ジャンル一覧",
-    path: "genre/index",
+    path: "genre/genres/:category_id",
     enabled: true,
-    permission: 2,
+    permission: 3,
     component: GenreList,
   },
   {
@@ -177,19 +177,19 @@ export const routes: Array<IRoute> = [
     component: EditGenre,
   },
 
-  //------------------Genre Management------------------
+  //------------------blog Management------------------
   {
     key: "blog-list-route",
     title: "ブログリスト",
-    path: "blog/index",
+    path: "blog/blogs/:genre_id",
     enabled: true,
     permission: 3,
-    component: BlogList,
+    component: BlogList1,
   },
   {
     key: "blog-create-route",
     title: "ブログを作成する",
-    path: "blog/create",
+    path: "blog/create/:genre_id",
     enabled: true,
     permission: 2,
     component: CreateBlog,
@@ -197,7 +197,7 @@ export const routes: Array<IRoute> = [
   {
     key: "blog-edit-route",
     title: "ブログを編集する",
-    path: "blog/edit/{id}",
+    path: "blog/edit/:id",
     enabled: true,
     permission: 2,
     component: EditBlog,
@@ -211,7 +211,6 @@ export const routes: Array<IRoute> = [
     permission: 3,
     component: ShowBlog,
   },
-
 ];
 
 export const authRoutes: Array<IRoute> = [

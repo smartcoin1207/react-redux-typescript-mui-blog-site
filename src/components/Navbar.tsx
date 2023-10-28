@@ -25,9 +25,15 @@ import {
 import { TemplateThemeModeContextType } from "../context";
 import { UserProfile, logout } from "../redux/actionCreators/authActions";
 import { getUserFromToken } from "../util/util";
-import { baseURL } from "../services/axios";
+import { baseURL, serverUrl } from "../services/axios";
 import { RootState } from "../redux/store/store";
 import { useCookies } from "react-cookie";
+
+import { emphasize, styled } from "@mui/material/styles";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Chip from "@mui/material/Chip";
+import HomeIcon from "@mui/icons-material/Home";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 interface IUser {
   name: string;
@@ -35,24 +41,82 @@ interface IUser {
   role_id?: string | null;
 }
 
+const StyledBreadcrumb = styled(Chip)(({ theme }) => {
+  const backgroundColor =
+    theme.palette.mode === "light"
+      ? theme.palette.grey[100]
+      : theme.palette.grey[800];
+  return {
+    backgroundColor,
+    height: theme.spacing(3),
+    color: theme.palette.text.primary,
+    fontWeight: theme.typography.fontWeightRegular,
+    "&:hover, &:focus": {
+      backgroundColor: emphasize(backgroundColor, 0.06),
+    },
+    "&:active": {
+      boxShadow: theme.shadows[1],
+      backgroundColor: emphasize(backgroundColor, 0.12),
+    },
+  };
+}) as typeof Chip; // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+
+function handleClick(event: React.MouseEvent<Element, MouseEvent>) {
+  event.preventDefault();
+  console.info("You clicked a breadcrumb.");
+}
+
 const Navbar: FC = (): ReactElement => {
   const theme = useTheme();
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.auth.user);
+  const userInfo: any = useSelector((state: RootState) => state.auth.user);
+
+  const current_group = useSelector(
+    (state: RootState) => state.blog.current_group
+  );
+  const current_category = useSelector(
+    (state: RootState) => state.blog.current_category
+  );
+  const current_genre = useSelector(
+    (state: RootState) => state.blog.current_genre
+  );
+  const current_blog = useSelector(
+    (state: RootState) => state.blog.current_blog
+  );
+
+  const current_page = useSelector(
+    (state: RootState) => state.blog.current_page
+  );
+
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [cookies1, setCookie1, removeCookie1] = useCookies(["usertoken"]);
 
-  const dispatch = useDispatch(); // Add this line to get the dispatch function
-  const userInfo: any = useSelector((state: RootState) => state.auth.user);
   const [avatar, setAvatar] = useState("128.png");
+  const [parentGroup, setParentGroup] = useState<any>(null);
+  const [parentCategory, setParentCategory] = useState<any>(null);
+  const [parentGenre, setParentGenre] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = useState("Accessories");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const [showTopPage, setShowTopPage] = useState(false);
+  const [showParentGroup, setShowParentGroup] = useState(false);
+  const [showParentCategory, setShowParentCategory] = useState(false);
+  const [showParentGenre, setShowParentGenre] = useState(false);
+
   const { broken } = useProSidebar();
   const { toggle } = useSidebar();
   const { menuTitle } = useSidebarSelectedMenuTitleContext();
   const { isDark } =
     useTemplateThemeModeContext() as TemplateThemeModeContextType;
 
-  let name = "";
-  const user = getUserFromToken();
-  name = user?.name;
+  const name = user?.name;
+
+  useEffect(() => {
+    dispatch(UserProfile());
+  }, []);
 
   useEffect(() => {
     console.log(userInfo);
@@ -62,8 +126,69 @@ const Navbar: FC = (): ReactElement => {
   }, [userInfo]);
 
   useEffect(() => {
-    dispatch(UserProfile());
-  }, []);
+    if (current_category) {
+      setParentGroup(current_category?.parent_group);
+    } else {
+      setParentGroup(null);
+    }
+  }, [current_category]);
+
+  useEffect(() => {
+    if (current_genre) {
+      setParentGroup(current_genre?.parent_group);
+      setParentCategory(current_genre?.parent_category);
+      setParentGenre(current_genre);
+    } else {
+      setParentCategory(null);
+    }
+  }, [current_genre]);
+
+  useEffect(() => {
+    if (current_blog) {
+      setParentGenre(current_blog?.genre);
+      setParentCategory(current_blog?.genre.category);
+      setParentGroup(current_blog?.genre.category.group);
+    } else {
+      setParentCategory(null);
+    }
+  }, [current_blog]);
+
+  useEffect(() => {
+    if(current_page == "") {
+      setShowTopPage(false);
+      setShowParentGroup(false);
+      setShowParentCategory(false);
+      setShowParentGenre(false);
+    }
+    if(current_page == "top") {
+      setShowTopPage(true);
+      setShowParentGroup(false);
+      setShowParentCategory(false);
+      setShowParentGenre(false);
+    }
+    if (current_page == "group") {
+      setShowTopPage(true);
+      setShowParentGroup(true);
+      setShowParentCategory(false);
+      setShowParentGenre(false);
+    }
+    if (current_page == "category") {
+      setShowTopPage(true);
+      setShowParentGroup(true);
+      setShowParentCategory(true);
+      setShowParentGenre(false);
+    }
+    if (current_page == "genre") {
+      setShowTopPage(true);
+      setShowParentGroup(true);
+      setShowParentCategory(true);
+      setShowParentGenre(true);
+    }
+  }, [current_page]);
+
+  const handleDropClick = () => {
+    setShowDropdown(!showDropdown);
+  };
 
   return (
     <Container maxWidth="xl">
@@ -82,24 +207,28 @@ const Navbar: FC = (): ReactElement => {
             justifyContent: "space-between",
           }}
         >
-<Typography
-  variant="h5"
-  color={
-    isDark ? theme.palette.success.dark : theme.palette.success.light
-  }
-  noWrap
-  sx={{
-    mr: 2,
-    display: { xs: "none", md: "flex" },
-    '& a:hover': {
-      color: 'red',
-    },
-  }}
->
-  <Link to="/" key={menuTitle} style={{ textDecoration: 'none', color: 'inherit' }}>
-    {menuTitle}
-  </Link>
-</Typography>
+          <Typography
+            variant="h5"
+            color={
+              isDark ? theme.palette.success.dark : theme.palette.success.light
+            }
+            noWrap
+            sx={{
+              mr: 2,
+              display: { xs: "none", md: "flex" },
+              "& a:hover": {
+                color: "red",
+              },
+            }}
+          >
+            <Link
+              to="/"
+              key={menuTitle}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              {menuTitle}
+            </Link>
+          </Typography>
           {broken && (
             <IconButton
               onClick={toggle}
@@ -114,6 +243,48 @@ const Navbar: FC = (): ReactElement => {
             </IconButton>
           )}
         </Box>
+        <div role="presentation" onClick={handleClick}>
+          <Breadcrumbs aria-label="breadcrumb">
+
+            {showTopPage && (
+              <StyledBreadcrumb
+              component="a"
+              href="#"
+              label="トップページ"
+              onClick={() => navigate("/")}
+              icon={<HomeIcon fontSize="small" />}
+            />
+            )}
+
+
+            {showParentGroup && (
+              <StyledBreadcrumb
+                component="a"
+                href="#"
+                label={parentGroup?.name}
+                onClick={() => navigate(`/step/steps/${parentGroup?.id}`)}
+              />
+            )}
+
+            {showParentCategory && (
+              <StyledBreadcrumb
+                component="a"
+                href="#"
+                label={parentCategory?.name}
+                onClick={() => navigate(`/genre/genres/${parentCategory?.id}`)}
+              />
+            )}
+
+            {showParentGenre && (
+              <StyledBreadcrumb
+                component="a"
+                href="#"
+                label={parentGenre?.name}
+                onClick={() => navigate(`/blog/blogs/${parentGenre?.id}`)}
+              />
+            )}
+          </Breadcrumbs>
+        </div>
         <Box
           sx={{
             display: "flex",
@@ -148,7 +319,7 @@ const Navbar: FC = (): ReactElement => {
                 px: 0.5,
                 py: 0,
                 my: 0,
-                border: 0
+                border: 0,
               }}
               displayEmpty
               renderValue={(value) => {
@@ -177,7 +348,7 @@ const Navbar: FC = (): ReactElement => {
                       </Typography>
                       <Avatar
                         sx={{ width: 35, height: 35, m: 0, p: 0 }}
-                        src={`${baseURL}images/${avatar}`}
+                        src={`${serverUrl}upload/images/${avatar}`}
                         alt="avatar"
                       />
                       {value}
@@ -205,65 +376,3 @@ const Navbar: FC = (): ReactElement => {
 };
 
 export default Navbar;
-
-// {/* <ConsoleLog title={'navbarSelect height'} message={document.getElementById("navbarSelect")?.clientHeight.toString()}/> */}
-
-//   {/* <Menu
-//     id="menu-appbar"
-//     anchorEl={anchorElNav}
-//     anchorOrigin={{
-//       vertical: "bottom",
-//       horizontal: "left",
-//     }}
-//     keepMounted
-//     transformOrigin={{
-//       vertical: "top",
-//       horizontal: "left",
-//     }}
-//     open={Boolean(anchorElNav)}
-//     onClose={toggle}
-//     sx={{
-//       display: { xs: "block", md: "none" },
-//     }}
-//   >
-//     {routes.map((page) => (
-//       <Link
-//         key={page.key}
-//         component={NavLink}
-//         to={page.path}
-//         color="black"
-//         underline="none"
-//         variant="button"
-//       >
-//         <MenuItem onClick={toggle}>
-//           <Typography textAlign="center">{page.title}</Typography>
-//         </MenuItem>
-//       </Link>
-//     ))}
-//   </Menu>
-// </Box>*/}
-// {/*<Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-//    <Box
-//     sx={{
-//       display: "flex",
-//       flexDirection: "row",
-//       justifyContent: "flex-start",
-//       alignItems: "center",
-//       marginLeft: "1rem",
-//     }}
-//   >
-//     {routes.map((page) => (
-//       <Link
-//         key={page.key}
-//         component={NavLink}
-//         to={page.path}
-//         color="black"
-//         underline="none"
-//         variant="button"
-//         sx={{ fontSize: "large", marginLeft: "2rem" }}
-//       >
-//         {page.title}
-//       </Link>
-//     ))}
-//   </Box>
-// </Box>*/}

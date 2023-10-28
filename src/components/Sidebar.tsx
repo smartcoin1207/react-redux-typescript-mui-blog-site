@@ -130,66 +130,6 @@ const SideBar: FC = (): ReactElement => {
           </SubMenu>
         )}
 
-        <SubMenu icon={<CategoryTwoTone />} label="ステップ管理">
-          <MenuItem
-            onClick={() => navigate("step/index", { replace: true })}
-            onMouseUp={() => menuItemMouseUpHandler("ステップリスト")}
-          >
-            ステップリスト
-          </MenuItem>
-          {(role == 2 || role == 1) && (
-            <MenuItem
-              onClick={() => navigate("step/create", { replace: true })}
-              onMouseUp={() => menuItemMouseUpHandler("ステップを作成する")}
-            >
-              ステップを作成する
-            </MenuItem>
-          )}
-        </SubMenu>
-
-        <SubMenu icon={<Category />} label="ジャンル管理">
-          <MenuItem
-            onClick={() => navigate("genre/index", { replace: true })}
-            onMouseUp={() => menuItemMouseUpHandler("ジャンル一覧")}
-          >
-            ジャンル一覧
-          </MenuItem>
-          {role == 1 && (
-            <MenuItem
-              onClick={() => navigate("genre/admin/create", { replace: true })}
-              onMouseUp={() => menuItemMouseUpHandler("ジャンルを作成する")}
-            >
-              ジャンルを作成する
-            </MenuItem>
-          )}
-
-          {role == 2 && (
-            <MenuItem
-              onClick={() => navigate("genre/leader/create", { replace: true })}
-              onMouseUp={() => menuItemMouseUpHandler("ジャンルを作成する")}
-            >
-              ジャンルを作成する
-            </MenuItem>
-          )}
-        </SubMenu>
-
-        <SubMenu icon={<LocalPostOffice />} label="ブログ管理">
-          <MenuItem
-            onClick={() => navigate("blog/index", { replace: true })}
-            onMouseUp={() => menuItemMouseUpHandler("ブログリスト")}
-          >
-            ブログリスト
-          </MenuItem>
-          {(role == 2 || role == 1) && (
-            <MenuItem
-              onClick={() => navigate("blog/create", { replace: true })}
-              onMouseUp={() => menuItemMouseUpHandler("ブログを作成する")}
-            >
-              ブログを作成する
-            </MenuItem>
-          )}
-        </SubMenu>
-
         <MenuItem
           icon={<Settings />}
           onClick={() => navigate("/config", { replace: true })}

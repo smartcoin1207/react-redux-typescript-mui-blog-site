@@ -1,5 +1,6 @@
 import { FC, ReactElement, ReactNode } from "react";
 import { Box, Card } from "@mui/material";
+import { ThemeColor } from "../styles/GlobalStyle";
 
 interface ContentProps {
     children: ReactNode;
@@ -31,7 +32,7 @@ export const Content: FC<ContentProps> = ({ children }): ReactElement => {
           // width:{xs:'100%', sm:'90%', md:'80%', lg:'80%', xl:'80%'}, 
           boxShadow:15,
           // "10px 10px 10px #b6d4f9",
-          backgroundColor:'#ffffff',
+          backgroundColor: `${ThemeColor.grey1}`,
         }}
       >
         {children}

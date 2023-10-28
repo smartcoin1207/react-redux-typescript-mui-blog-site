@@ -19,6 +19,9 @@ export enum ActionType {
     GET_ALL_GENRES  = 'GET_ALL_GENRES',
     GET_BLOGS  = 'GET_BLOGS',
     GET_BLOG  = 'GET_BLOG',
+    GET_NEW_BLOGS  = 'GET_NEW_BLOGS',
+    GET_SEARCH_BLOGS  = 'GET_SEARCH_BLOGS',
+    GET_USER_BY_ID = 'GET_USER_BY_ID'
 
 }
 
@@ -88,6 +91,21 @@ export interface IGetBlog {
     payload: any
 }
 
+export interface IGetNewBlog {
+    type: ActionType.GET_NEW_BLOGS,
+    payload: any
+}
+
+export interface ISearchBlogs {
+    type: ActionType.GET_SEARCH_BLOGS,
+    payload: any
+}
+
+export interface IGetUserById {
+    type: ActionType.GET_USER_BY_ID,
+    payload: any
+}
+
 export type Action = 
     | IUserProfileStart
     | IUserProfileSuccess
@@ -104,4 +122,7 @@ export type Action =
     | IGetAllGenres
     | IGetBlogs
     | IGetBlog
+    | IGetNewBlog
+    | ISearchBlogs
+    | IGetUserById
 

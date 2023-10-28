@@ -11,8 +11,9 @@ import React from "react";
 import AppRoutes from "./routes/routes";
 import "../src/assets/css/style.css";
 function App() {
+
   dayjs.locale("ja");
-  const locales = ["en", "en-gb", "zh-cn", "de"];
+  const locales = ["en", "en-gb", "zh-cn", "de","ja"];
 
   type LocaleKey = (typeof locales)[number];
 

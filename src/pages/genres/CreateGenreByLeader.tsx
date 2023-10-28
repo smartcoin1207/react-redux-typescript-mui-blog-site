@@ -39,7 +39,7 @@ import {
   } from "@mui/material";
   import { styled } from "@mui/material/styles";
   
-  import { AddGenre, AddStep, getAllCategories, getAllGroups } from "../../redux/actionCreators/userActions";
+  import { AddGenre,  getAllCategories, getAllGroups } from "../../redux/actionCreators/userActions";
   import { RootState } from "../../redux/store/store";
   import { useNavigate } from "react-router-dom";
   import jwt_decode from "jwt-decode";

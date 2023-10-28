@@ -1,12 +1,14 @@
 import { FC, ReactElement, useEffect, useState } from "react";
-import { styled } from "@mui/material/styles"; //useTheme
-import Paper from "@mui/material/Paper";
 import { useDispatch, useSelector } from "react-redux";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { useParams } from "react-router-dom";
 
-import { UserProfile } from "../../redux/actionCreators/authActions";
+import Paper from "@mui/material/Paper";
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
+import { Link } from "react-router-dom";
 import { RootState } from "../../redux/store/store";
-import { IUser } from "../../models/user";
+import { toast } from "react-toastify";
+
+import { styled } from "@mui/material/styles"; //useTheme
 import {
   Box,
   TextField,
@@ -23,9 +25,17 @@ import {
   ListItem,
   ListItemText,
 } from "@mui/material";
-import { blue, red } from "@mui/material/colors";
+import { blue, grey, red } from "@mui/material/colors";
 import { Padding } from "@mui/icons-material";
 import { ThemeColor, theme } from "../../styles/GlobalStyle";
+import {
+  GetNewBlogs,
+  GetSearchResult,
+  getAllGroups,
+} from "../../redux/actionCreators/userActions";
+import { getAllCategories, setCurrentPage } from "../../redux/actionCreators/blogActions";
+import { group } from "console";
+import { forEach, initial, values } from "lodash";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode !== "dark" ? "whitesmoke" : "#fff",
@@ -57,28 +67,160 @@ const MapContainer = () => {
   );
 };
 
+interface ChildComponentProps {
+  id: string;
+  title: string;
+  time: number;
+}
+
+interface GroupTitleComponentProps {
+  id: string;
+  title: string;
+  isSuper: boolean;
+  allowed: any[] | null;
+}
+
+const BlogTitleItem: FC<ChildComponentProps> = ({ id, title, time }) => {
+  // alert(time)
+
+  const inputDateString = time;
+  const inputDate = new Date(inputDateString);
+  const formattedDate = inputDate.toLocaleString("ja-JP", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  });
+  return (
+    <>
+      <ListItem button sx={{ padding: 0, margin: 0 }}>
+        <Link to={`/blog/show/${id}`} style={{ textDecoration: "none" }}>
+          <Typography sx={{ fontSize: "1.3rem" }}>{title}</Typography>
+
+          <Typography sx={{ mr: 2, color: "grey" }}>{formattedDate}</Typography>
+        </Link>
+      </ListItem>
+      <Divider sx={{ mt: 1, mb: 1 }} />
+    </>
+  );
+};
+
+const GroupNameItem: FC<GroupTitleComponentProps> = ({
+  id,
+  title,
+  isSuper,
+  allowed,
+}) => {
+  let allow = false;
+  if (isSuper || allowed?.includes(`${id}`)) {
+    allow = true;
+  }
+  return (
+    <>
+      <>
+        {allow ? (
+          <Link
+            to={allow ? `/step/steps/${id}` : ""}
+            style={{ textDecoration: "none" }}
+          >
+            <Typography sx={{ fontSize: "1.3rem" }}>{title}</Typography>
+          </Link>
+        ) : (
+          <Typography sx={{ fontSize: "1.3rem", color: "grey" }}>
+            {title}
+          </Typography>
+        )}
+      </>
+      <Divider sx={{ mt: 1, mb: 1 }} />
+    </>
+  );
+};
+
 const Dashboard: FC = (): ReactElement => {
   const dispatch = useDispatch();
   const user: any | null | undefined = useSelector(
     (state: RootState) => state.auth.user
   );
+  const groups: any = useSelector((state: RootState) => state.blog.all_groups);
 
-  const [profile, setProfile] = useState({});
+  // const all_categories: any = useSelector((state: RootState) => state.blog.all_categories);
 
+  const new_blogs: any = useSelector(
+    (state: RootState) => state.users.new_blogs
+  );
+  const searchBlogs: any = useSelector(
+    (state: RootState) => state.users.search_blogs
+  );
+
+  const [viewGroups, setViewGroups] = useState<any[]>([]);
+  const [viewGroupIds, setViewGroupIds] = useState<any[]>([]);
   const [name, setName] = useState("");
-  const [user_id, setId] = useState("");
-  const [ninetieth_life, setNinetieth_life] = useState("");
-  const [work_life, setWork_life] = useState("");
-  const [die_life, setDie_life] = useState("");
-  const [healthy_life, setHealthy_life] = useState("");
-  const [average_life, setAverage_life] = useState("");
+  const [searchTitle, setSearchTitle] = useState("");
+  const [searchContent, setSearchContent] = useState("");
 
   useEffect(() => {
-    // const ss = user?.name
+    dispatch(getAllCategories());
+  }, []);
+
+  useEffect(() => {
+    dispatch(setCurrentPage(''));
+  } ,[])
+
+  useEffect(() => {
+    dispatch(GetNewBlogs());
+  }, []);
+
+  useEffect(() => {
     setName(user?.name);
   }, [user]);
 
+  useEffect(() => {
+    console.log(groups);
+
+    if (user) {
+      const allowed_categories = JSON.parse(user?.allowed_categories);
+      console.log(allowed_categories);
+
+      if (user.role_id == "1") {
+        setViewGroups(groups);
+      } else {
+        let temp: any = [];
+        if (user.role_id == "2") {
+          temp.push("1");
+          temp.push(user?.group_id);
+        }
+
+        Object.entries(allowed_categories).forEach(([key, value]) => {
+          temp.push(key);
+        });
+        setViewGroupIds(temp);
+        console.log(temp);
+        let temp_groups: any[] = [];
+        groups?.forEach((group: any) => {
+          if (temp.includes(`${group?.id}`)) {
+            temp_groups.push(group);
+          }
+        });
+        setViewGroups(temp_groups);
+      }
+    }
+  }, [groups]);
   // const theme = useTheme();  // sx={{[theme.breakpoints.down('sm')]: {display:'flex', flexDirection:'column', justifyContent:'center'}}}
+
+  const onSearch = () => {
+    if (searchTitle != "" || searchContent != "") {
+      const search = {
+        title: searchTitle,
+        content: searchContent,
+      };
+      dispatch(GetSearchResult(search));
+    } else {
+      toast.error("正しい検索フィールド", {
+        autoClose: 1000,
+      });
+    }
+  };
 
   return (
     <Box
@@ -103,7 +245,7 @@ const Dashboard: FC = (): ReactElement => {
         <Typography
           sx={{
             color: ThemeColor.main,
-            paddingTop: "20px",
+            paddingTop: "20px",   
             mb: 2,
             textAlign: "left",
             fontSize: "1.5rem",
@@ -117,8 +259,12 @@ const Dashboard: FC = (): ReactElement => {
           divider={<Divider orientation="vertical" flexItem />}
           spacing={3}
         >
-          <>Aグループ</>
-          <>Bグループ</>
+          {viewGroups?.map((group: any) => (
+            <Typography sx={{fontSize: '1.2rem'}}>
+              {" "}
+              <Link to={`/step/steps/${group?.id}`} style={{textDecoration: 'none', color: 'initial'}}>{group?.name}</Link>
+            </Typography>
+          ))}
         </Stack>
       </Box>
 
@@ -134,7 +280,7 @@ const Dashboard: FC = (): ReactElement => {
             title="あなたに残された人生は後"
             sx={{ color: ThemeColor.main }}
           />
-          <Divider orientation="horizontal"/>
+          <Divider orientation="horizontal" />
 
           <CardContent>
             {/* <FormControl> */}
@@ -196,6 +342,8 @@ const Dashboard: FC = (): ReactElement => {
               label="タイトル検索"
               type="search"
               size="small"
+              value={searchTitle}
+              onChange={(e) => setSearchTitle(e.target.value)}
               sx={{
                 borderRadius: "15px",
                 padding: "10px",
@@ -214,6 +362,8 @@ const Dashboard: FC = (): ReactElement => {
               label="本文検索"
               type="search"
               size="small"
+              value={searchContent}
+              onChange={(e) => setSearchContent(e.target.value)}
               sx={{
                 borderRadius: "15px",
                 padding: "10px",
@@ -229,6 +379,7 @@ const Dashboard: FC = (): ReactElement => {
             <Button
               variant="contained"
               size="small"
+              onClick={onSearch}
               sx={{
                 borderRadius: "5px",
                 display: "flex",
@@ -243,6 +394,18 @@ const Dashboard: FC = (): ReactElement => {
           </Grid>
         </Grid>
       </Box>
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <List>
+        {searchBlogs?.map((blog: any) => (
+          <BlogTitleItem
+            title={blog?.title}
+            id={blog?.id}
+            time={blog?.created_at}
+          />
+        ))}
+        </List>
+
+      </Box>
       <Box>
         <Card sx={{ marginTop: "20px" }}>
           <CardHeader
@@ -252,25 +415,36 @@ const Dashboard: FC = (): ReactElement => {
           />
           <Divider />
           <CardContent>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 2023年9月19日 12:21 記事タイトル
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 2023年9月7日 15:10 記事タイトル{" "}
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              •2023年8月8日 11:10 記事タイトル{" "}
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              • 2023年7月17日 17:00 記事タイトル{" "}
-            </Typography>
-            <Typography variant="body1" style={{ marginBottom: "10px" }}>
-              •2023年6月10日 23:21 記事タイトル{" "}
-            </Typography>
+            {new_blogs?.map((blog: any) => (
+              <BlogTitleItem
+                title={blog.title}
+                id={blog.id}
+                time={blog.created_at}
+              />
+            ))}
           </CardContent>
         </Card>
       </Box>
-      <Box sx={{ marginTop: "30px" }}>{/* <MapContainer /> */}</Box>
+      <Box sx={{ marginTop: "20px" }}>
+        <Typography variant="h5" sx={{ color: ThemeColor.main, mt: 8, mb: 2 }}>
+          サイト内のすべてのグループ
+        </Typography>
+        <Divider />
+        {groups?.map((group: any) => (
+          <GroupNameItem
+            title={group.name}
+            id={group.id}
+            isSuper={user?.role_id == 1}
+            allowed={viewGroupIds}
+          />
+        ))}
+      </Box>
+      <Box sx={{ marginTop: "30px" }}>
+        <Typography variant="h5" sx={{ color: ThemeColor.main, mt: 8, mb: 2 }}>
+          Googleマップ
+        </Typography>
+        {/* <MapContainer /> */}
+      </Box>
     </Box>
   );
 };

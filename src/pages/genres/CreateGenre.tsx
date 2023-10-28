@@ -41,7 +41,6 @@ import { styled } from "@mui/material/styles";
 
 import {
   AddGenre,
-  AddStep,
   getAllCategories,
   getAllGroups,
 } from "../../redux/actionCreators/userActions";

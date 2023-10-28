@@ -39,7 +39,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-import { AddStep, getAllGroups } from "../../redux/actionCreators/userActions";
+// import { AddStep, getAllGroups } from "../../redux/actionCreators/blogActions";
 import { RootState } from "../../redux/store/store";
   import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
@@ -50,6 +50,8 @@ interface IUser {
   user_id?: string | null;
   role_id: string;
 }
+
+
 
 const CreateStep: FC = (): ReactElement => {
   const navigate = useNavigate();
@@ -70,7 +72,7 @@ const CreateStep: FC = (): ReactElement => {
   }
 
   useEffect(() => {
-    dispatch(getAllGroups());
+    // dispatch(getAllGroups());
   }, []);
 
   const handleGroupChange = (event: SelectChangeEvent) => {
@@ -85,7 +87,7 @@ const CreateStep: FC = (): ReactElement => {
       name: step,
     };
 
-    dispatch(AddStep(navigate, newStep));
+    // dispatch(AddStep(navigate, newStep));
   };
 
   const Item = styled(Paper)(({ theme }) => ({

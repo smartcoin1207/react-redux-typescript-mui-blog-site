@@ -3,10 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import jwt_decode from "jwt-decode";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
-import { DateField } from "@mui/x-date-pickers/DateField";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import {
@@ -34,6 +32,7 @@ import {
   Select,
   MenuItem,
   InputLabel,
+  FormLabel,
 } from "@mui/material";
 import { Category, Edit, Groups } from "@mui/icons-material";
 
@@ -44,10 +43,11 @@ import {
   getAllGroups,
   getData,
 } from "../../redux/actionCreators/userActions";
-import "../../assets/css/style.css";
+// import "../../assets/css/style.css";
 import { RootState } from "../../redux/store/store";
-import { group } from "console";
 import { ThemeColor } from "../../styles/GlobalStyle";
+import { getAllCategories } from "../../redux/actionCreators/blogActions";
+import { Root } from "react-dom/client";
 
 interface IUser {
   name: string;
@@ -58,17 +58,21 @@ interface IUser {
 const CreateUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const basicCategories = useSelector(
-    (state: RootState) => state.users.basicCategories
+
+  const all_categories = useSelector(
+    (state: RootState) => state.blog.all_categories
   );
-  const allGroups = useSelector((state: RootState) => state.users.groups);
+  const all_groups = useSelector((state: RootState) => state.blog.all_groups);
+  const user = useSelector((state: RootState) => state.auth.user );
+
+
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const [cookies, setCookie, removeCookie] = useCookies(["usertoken"]);
   const usertoken = cookies.usertoken;
   const [name, setName] = useState("");
   const [read_name, setReadName] = useState("");
   const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("1990-01-01");
   const [password, setPassword] = useState("");
   const [user_id, setUserId] = useState("");
   const [phone, setPhone] = useState("");
@@ -80,13 +84,26 @@ const CreateUser = () => {
   const [die_life, setDie_life] = useState("");
   const [healthy_life, setHealthy_life] = useState("");
   const [average_life, setAverage_life] = useState("");
-  const [commonData, setCommonData] = useState<ICategory[]>([]);
-  const [groupData, setGroupData] = useState<ICategory[]>([]);
-  const [selectedGroup, setSelectedGroup] = useState("");
+  const [status, setStatus] = useState("1");
+  const [old, setOld] = useState(0);
 
+  const [commonData, setCommonData] = useState<ICategory[]>([]);
+  const [commonData2, setCommonData2] = useState<ICategory[]>([]);
+
+  const [groupData, setGroupData] = useState<ICategory[]>([]);
+  const [selectedGroupId, setSelectedGroupId] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
   const [teamGroups, setTeamGroups] = useState<any[]>([]);
-  const [selectedCommonValues, setSelectedCommonValues] = useState<any[]>([]);
-  const [selectedGroupValues, setSelectedGroupValues] = useState<any[]>([]);
+  const [allowedCommonCategories, setAllowedCommonCategories] = useState<any[]>(
+    []
+  );
+  const [allowedCommon2Categories, setAllowedCommon2Categories] = useState<
+    any[]
+  >([]);
+
+  const [allowedGroupCategories, setAllowedGroupCategories] = useState<any[]>(
+    []
+  );
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [avatar, setAvatar] = useState<File | null>(null);
   const [showRoleSelection, setShowRoleSelection] = useState(true);
@@ -102,76 +119,99 @@ const CreateUser = () => {
     if (role == 2) {
       setShowRoleSelection(false);
       setSelectedRole("3");
-    } else {
-      dispatch(getAllGroups());
     }
   }, []);
 
   useEffect(() => {
-    dispatch(getData());
+    dispatch(getAllCategories());
   }, []);
 
   useEffect(() => {
-    if (allGroups) {
-      const filteredGroups = allGroups.filter((group) => group.id !== 1);
+    if (all_groups) {
+      const filteredGroups = all_groups.filter(
+        (group) => group.id != 1 && group.id != 2
+      );
       setTeamGroups(filteredGroups);
+    } 
+    if(role == 2) {
+      if(user)
+      setSelectedGroupId(user?.group_id);
     }
-  }, [allGroups]);
+  }, [all_groups]);
+
 
   useEffect(() => {
-    if (basicCategories) {
-      if (basicCategories.common_group_categories != null) {
-        setCommonData(basicCategories.common_group_categories);
-      }
-
-      if (basicCategories.mygroup_categories != null) {
-        setGroupData(basicCategories.mygroup_categories);
-        console.log(basicCategories.mygroup_categories)
-      }
+    if(all_categories) {
+      setCommonData(all_categories['1']);
+      setCommonData2(all_categories['2']);
+      setGroupData(all_categories[`${user?.group_id}`]);
     }
-  }, [basicCategories]);
+  }, [all_categories]);
+
+  useEffect(() => {
+    setOld(2);
+  }, [dateOfBirth])
 
   const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(event.target.value);
-    if(!selectedGroup) {
+    if (!selectedGroupId) {
       setGroupData([]);
-
     }
   };
 
+  const handleStatusChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setStatus(event.target.value);
+  };
+
   const handleSelectChange = (event: SelectChangeEvent) => {
-    setSelectedGroup(event.target.value as string);
-
-      if(basicCategories) {
-        if (basicCategories.mygroup_categories != null) {
-
-          let temp :any[] = [];
-          
-          basicCategories.mygroup_categories.forEach(category => {
-            if(category?.group_id == event.target.value) {
-              temp.push(category);
-            }
-          });
-
-          setGroupData(temp);
-        }
+    setSelectedGroupId(event.target.value as string);
+    let tmp = null;
+    teamGroups.forEach((group) => {
+      if (group.id == event.target.value) {
+        tmp = group;
+        return;
       }
+    });
+    setSelectedGroup(tmp);
+
+    if(all_categories) {
+      setGroupData(all_categories[event.target.value as string]);
+    }
+
   };
 
   const handleDeviceChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedDevice(event.target.value);
   };
 
-  //common group
+  //common1 group
   const handleCommonCheckboxChange = (event: any) => {
     const value = event.target.value;
     const isChecked = event.target.checked;
 
     if (isChecked) {
-      setSelectedCommonValues((prevValues: any[]) => [...prevValues, value]);
-      console.log(selectedCommonValues);
+      setAllowedCommonCategories((prevValues: any[]) => [...prevValues, value]);
+      console.log(allowedCommonCategories);
     } else {
-      setSelectedCommonValues((prevValues: any[]) =>
+      setAllowedCommonCategories((prevValues: any[]) =>
+        prevValues.filter((v) => v !== value)
+      );
+    }
+  };
+
+  //common2 group
+  const handleCommon2CheckboxChange = (event: any) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      setAllowedCommon2Categories((prevValues: any[]) => [
+        ...prevValues,
+        value,
+      ]);
+      console.log(allowedCommonCategories);
+    } else {
+      setAllowedCommon2Categories((prevValues: any[]) =>
         prevValues.filter((v) => v !== value)
       );
     }
@@ -183,9 +223,9 @@ const CreateUser = () => {
     const isChecked = event.target.checked;
 
     if (isChecked) {
-      setSelectedGroupValues((prevValues: any[]) => [...prevValues, value]);
+      setAllowedGroupCategories((prevValues: any[]) => [...prevValues, value]);
     } else {
-      setSelectedGroupValues((prevValues: any[]) =>
+      setAllowedGroupCategories((prevValues: any[]) =>
         prevValues.filter((v) => v !== value)
       );
     }
@@ -228,16 +268,17 @@ const CreateUser = () => {
     if (avatar) {
       formData.append("avatar", avatar);
     }
+
     formData.append("name", name);
     formData.append("read_name", read_name);
     formData.append("email", email);
     formData.append("password", password);
     formData.append("birthday", dateOfBirth);
     formData.append("user_id", user_id);
-    formData.append("phone", phone);
+    formData.append("phone_number", phone);
     formData.append("phone_device", selectedDevice);
     formData.append("role_id", selectedRole);
-    formData.append("group_id", selectedGroup);
+    formData.append("group_id", selectedGroupId);
     formData.append("status", "1");
     formData.append("memo", memo);
     formData.append("ninetieth_life", ninetieth_life);
@@ -245,36 +286,37 @@ const CreateUser = () => {
     formData.append("die_life", die_life);
     formData.append("healthy_life", healthy_life);
     formData.append("average_life", average_life);
-    console.log(selectedCommonValues);
-    console.log(selectedGroupValues);
+    formData.append("status", status);
 
-    selectedCommonValues.forEach((element, index) => {
-      formData.append(`common1_permission[${index}]`, element);
-    });
+    let allowed_categories = null;
+    
+    if(role == 1 && selectedRole == '2') {
+      allowed_categories = {
+        '2' : allowedCommon2Categories,
+      }
+    } else  if(role ==1 && selectedRole == '3') {
+      allowed_categories = {
+        '1' : allowedCommonCategories,
+        [selectedGroupId] : allowedGroupCategories,
+      }
+    } else if(role == 2) {
+      allowed_categories = {
+        '1' : allowedCommonCategories,
+        [selectedGroupId] : allowedGroupCategories
+      }
+    }
 
-    selectedGroupValues.forEach((element, index) => {
-      formData.append(`mygroup_permission[${index}]`, element);
-    });
+    formData.append("allowed_categories", JSON.stringify(allowed_categories));
 
     if (role == 1 && selectedRole == "2") {
       dispatch(AddLeader(navigate, formData));
     } else {
       dispatch(AddUser(navigate, formData));
     }
-
   };
 
   return (
-    <Box sx={{ width: { xs: "100%", ms: "90%", md: "80%", lg: "50%" } }}>
-      {/* <CardHeader
-          title="ユーザー登録"
-          sx={{
-            justifyContent: "center",
-            color: "white",
-            backgroundColor: "#2196f3",
-            fontWeight: '600'
-          }}
-        /> */}
+    <Box sx={{ width: { xs: "100%", ms: "90%", md: "80%", lg: "50%" }, mb: 2 }}>
       <Typography
         sx={{
           fontSize: "2rem",
@@ -291,7 +333,7 @@ const CreateUser = () => {
       <Card
         sx={{
           // mt: 1,
-          border: "solid 2px #2196f3",
+          border: "solid 2px initial",
           width: "100%",
         }}
       >
@@ -413,14 +455,14 @@ const CreateUser = () => {
                 <Select
                   labelId="group-select-label"
                   id="user-group-select"
-                  value={selectedGroup}
+                  value={selectedGroupId}
                   label="グループを選択"
                   onChange={handleSelectChange}
                   required
                 >
                   {teamGroups?.map((group: any) => {
                     return (
-                      <MenuItem key={group.id + "group"} value={group.id}>
+                      <MenuItem key={group.id + 1000} value={group.id}>
                         {group.name}
                       </MenuItem>
                     );
@@ -432,19 +474,7 @@ const CreateUser = () => {
             <Typography sx={{ mt: 4, mb: 1, ml: 1 }} variant="body1">
               生年月日
             </Typography>
-            {/* <TextField
-  type="date"
-  variant="outlined"
-  color="primary"
-  onChange={(e) => setDateOfBirth(e.target.value)}
-  value={dateOfBirth}
-  fullWidth
-  required
-  inputProps={{
-    pattern: "\\d{4}-\\d{2}-\\d{2}", // Regular expression for yyyy/mm/dd format
-  }}
-  sx={{ mb: 4 }}
-/> */}
+
             <Box sx={{ mb: 4, width: "100%" }}>
               <DatePicker
                 format="YYYY/MM/DD"
@@ -667,23 +697,29 @@ const CreateUser = () => {
               </CardContent>
             </Card>
 
-            {selectedRole === "3" && (
+            {groupData?.length > 0 && selectedRole === "3" && (selectedGroup || role == 2) && (
               <Card
                 sx={{
                   mb: 4,
                   border: "solid 1px #2196f3",
                 }}
               >
-                <CardHeader title="岩橋グループ内のカテゴリ閲覧権限" />
+                <CardHeader
+                  title={
+                    (role == 2 ? "私の" : selectedGroup?.name) +
+                    "グループ内のカテゴリ閲覧権限"
+                  }
+                />
+
                 <Divider sx={{ border: "1px dotted #2196f3" }} />
 
                 <CardContent>
-                  {groupData.map((checkbox: ICategory) => (
+                  {groupData?.map((checkbox: ICategory) => (
                     <FormControlLabel
                       key={checkbox.id}
                       control={
                         <Checkbox
-                          checked={selectedGroupValues.includes(
+                          checked={allowedGroupCategories.includes(
                             `${checkbox.id}`
                           )}
                           onChange={handleGroupCheckboxChange}
@@ -697,38 +733,108 @@ const CreateUser = () => {
               </Card>
             )}
 
-            <Card
-              sx={{
-                mb: 4,
-                border: "solid 1px #2196f3",
-              }}
-            >
-              <CardHeader title="全体共通グループ 【1】 内のカテゴリ閲覧権限" />
-              <Divider sx={{ border: "1px dotted #2196f3" }} />
+            {selectedRole == "3" && (
+              <Card
+                sx={{
+                  mb: 4,
+                  border: "solid 1px #2196f3",
+                }}
+              >
+                <CardHeader title="全体共通グループ 【1】 内のカテゴリ閲覧権限" />
+                <Divider sx={{ border: "1px dotted #2196f3" }} />
 
-              <CardContent>
-                {commonData.map((checkbox: ICategory) => (
-                  <FormControlLabel
-                    key={checkbox.id}
-                    control={
-                      <Checkbox
-                        checked={selectedCommonValues.includes(
-                          `${checkbox.id}`
-                        )}
-                        onChange={handleCommonCheckboxChange}
-                        value={checkbox.id}
-                      />
-                    }
-                    label={checkbox.name}
-                  />
-                ))}
-              </CardContent>
-            </Card>
+                <CardContent>
+                  {commonData?.map((checkbox: ICategory) => (
+                    <FormControlLabel
+                      key={checkbox.id}
+                      control={
+                        <Checkbox
+                          checked={allowedCommonCategories.includes(
+                            `${checkbox.id}`
+                          )}
+                          onChange={handleCommonCheckboxChange}
+                          value={checkbox.id}
+                        />
+                      }
+                      label={checkbox.name}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            {selectedRole == "2" && (
+              <Card
+                sx={{
+                  mb: 4,
+                  border: "solid 1px #2196f3",
+                }}
+              >
+                <CardHeader title="全体共通グループ 【2】 内のカテゴリ閲覧権限" />
+                <Divider sx={{ border: "1px dotted #2196f3" }} />
+
+                <CardContent>
+                  {commonData2.map((checkbox: ICategory) => (
+                    <FormControlLabel
+                      key={checkbox.id}
+                      control={
+                        <Checkbox
+                          checked={allowedCommon2Categories.includes(
+                            `${checkbox.id}`
+                          )}
+                          onChange={handleCommon2CheckboxChange}
+                          value={checkbox.id}
+                        />
+                      }
+                      label={checkbox.name}
+                    />
+                  ))}
+                </CardContent>
+              </Card>
+            )}
+
+            <Box sx={{ ml: 0, mb: 2 }}>
+              <FormLabel
+                id="demo-radio-buttons-group-label"
+                sx={{ fontSize: "1.5rem", ml: 1, fontWeight: 400 }}
+              >
+                ステータス
+              </FormLabel>
+              <Card sx={{ mt: 2 }}>
+                <CardContent>
+                  <RadioGroup
+                    aria-labelledby="status-radio-buttons-group-label"
+                    defaultValue="1"
+                    name="radio-buttons-group"
+                    onChange={handleStatusChange}
+                    sx={{ ml: 2 }}
+                  >
+                    <FormControlLabel
+                      value="1"
+                      control={<Radio />}
+                      label="OK"
+                      defaultChecked
+                    />
+                    <FormControlLabel
+                      value="2"
+                      control={<Radio />}
+                      label="一時停止"
+                    />
+                    <FormControlLabel
+                      value="3"
+                      control={<Radio />}
+                      label="ブロック"
+                    />
+                  </RadioGroup>
+                </CardContent>
+              </Card>
+            </Box>
+
             <Button
               variant="outlined"
               color="primary"
               type="submit"
-              sx={{ textAlign: "right" }}
+              sx={{ textAlign: "right", mb: 2, float: "right" }}
             >
               登録する
             </Button>

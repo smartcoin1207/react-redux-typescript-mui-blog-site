@@ -6,10 +6,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { RootState } from "../../redux/store/store";
 import {
-  AddBlog,
-  GetBlog,
-  getAllGenres,
-} from "../../redux/actionCreators/userActions";
+  GetBlog, setCurrentPage,
+} from "../../redux/actionCreators/blogActions";
 import { useParams } from "react-router-dom";
 
 import {
@@ -31,22 +29,24 @@ const ShowBlog: FC = (): ReactElement => {
   const { id } = useParams();
 
   const dispatch = useDispatch();
-  const blog = useSelector((state: RootState) => state.users.blog);
+
+  const user = useSelector((state: RootState) => state.auth.user);
+  const blog = useSelector((state: RootState) => state.blog.current_blog);
   const navigate = useNavigate();
 
-  const [selectedGenre, setSelectedGenre] = useState("");
-
-  const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
-
   useEffect(() => {
-    dispatch(GetBlog(id));
+    dispatch(GetBlog(navigate, id));
   }, []);
+
+  
+  useEffect(() => {
+    dispatch(setCurrentPage('genre'));
+  }, [])
 
   return (
     <Box
       sx={{
-        width: "100%",
+        width: {xs: '100%', ms: '90%', md: '90%', lg: '80%'},
         padding: 4,
       }}
     >
@@ -76,10 +76,18 @@ const ShowBlog: FC = (): ReactElement => {
 
         <CardContent>
           <Box>
-            <div>{blog?.content}</div>
+            <div>{blog?.content}</div>  
           </Box>
         </CardContent>
       </Card>
+      {(user?.role_id == '1' ||
+                (user?.role_id == '2')) && (
+                  <Box sx={{mt: 4}}>
+                  <Button variant="outlined" sx={{float: 'right'}} color="success" onClick={() => navigate(`/blog/edit/${id}`)}>編集</Button>
+            
+                  </Box>
+                )}
+
     </Box>
   );
 };
