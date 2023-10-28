@@ -386,7 +386,7 @@ const CreateGenreModal: FC<CreateGenreModalProps> = ({
               component="h2"
               sx={{ mb: 2 }}
             >
-              ステップ名
+              ジャンル名
             </Typography>
 
             <OutlinedInput
@@ -469,7 +469,7 @@ const EditGenreModal: FC<EditGenreModalProps> = ({
               component="h2"
               sx={{ mb: 2 }}
             >
-              ステップ名を変更します。
+              ジャンル名を変更します。
             </Typography>
 
             <OutlinedInput
