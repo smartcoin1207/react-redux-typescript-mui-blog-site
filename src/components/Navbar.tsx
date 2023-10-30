@@ -47,9 +47,9 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
       ? theme.palette.grey[100]
       : theme.palette.grey[800];
   return {
-    backgroundColor,
+    // backgroundColor,
     height: theme.spacing(3),
-    color: theme.palette.text.primary,
+    color: theme.palette.success.dark,
     fontWeight: theme.typography.fontWeightRegular,
     "&:hover, &:focus": {
       backgroundColor: emphasize(backgroundColor, 0.06),
@@ -59,7 +59,7 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => {
       backgroundColor: emphasize(backgroundColor, 0.12),
     },
   };
-}) as typeof Chip; // TypeScript only: need a type cast here because https://github.com/Microsoft/TypeScript/issues/26591
+}) as typeof Chip; 
 
 function handleClick(event: React.MouseEvent<Element, MouseEvent>) {
   event.preventDefault();
@@ -245,16 +245,16 @@ const Navbar: FC = (): ReactElement => {
         </Box>
         <div role="presentation" onClick={handleClick}>
           <Breadcrumbs aria-label="breadcrumb">
-
+{/* 
             {showTopPage && (
               <StyledBreadcrumb
               component="a"
               href="#"
               label="トップページ"
               onClick={() => navigate("/")}
-              icon={<HomeIcon fontSize="small" />}
+              // icon={<HomeIcon sx={{color: theme.palette.success.dark}} fontSize="small" />}
             />
-            )}
+            )} */}
 
 
             {showParentGroup && (
@@ -357,7 +357,7 @@ const Navbar: FC = (): ReactElement => {
                 );
               }}
             >
-              <MenuItem>私のプロフィール</MenuItem>
+              {/* <MenuItem>私のプロフィール</MenuItem> */}
               <MenuItem
                 onClick={() => {
                   removeCookie("token");

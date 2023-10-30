@@ -191,7 +191,7 @@ const GenreList: FC = (): ReactElement => {
 
       <Card>
         <CardContent>
-          <Typography
+          {/* <Typography
             sx={{ textAlign: "center", fontWeight: "bold", my: "1rem" }}
             variant="h4"
           >
@@ -201,7 +201,7 @@ const GenreList: FC = (): ReactElement => {
             </Box>
             ID: {user?.user_id}
           </Typography>
-          <Divider orientation="horizontal" />
+          <Divider orientation="horizontal" /> */}
 
           <Box sx={{ mt: 4 }}>
             {/* <Typography
