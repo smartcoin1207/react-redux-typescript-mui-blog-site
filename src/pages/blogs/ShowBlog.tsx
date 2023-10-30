@@ -43,6 +43,14 @@ const ShowBlog: FC = (): ReactElement => {
     dispatch(setCurrentPage('genre'));
   }, [])
 
+  const isEditBlog = () => {
+    let isEdit = false;
+    if(user?.role_id == '1' || (user?.role_id == '2' && blog?.group_id == user?.group_id)) {
+      isEdit = true;
+    }
+    return isEdit;
+  }
+
   return (
     <Box
       sx={{
@@ -80,8 +88,7 @@ const ShowBlog: FC = (): ReactElement => {
           </Box>
         </CardContent>
       </Card>
-      {(user?.role_id == '1' ||
-                (user?.role_id == '2')) && (
+      {isEditBlog() && (
                   <Box sx={{mt: 4}}>
                   <Button variant="outlined" sx={{float: 'right'}} color="success" onClick={() => navigate(`/blog/edit/${id}`)}>編集</Button>
             

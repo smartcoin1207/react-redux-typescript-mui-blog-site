@@ -35,7 +35,7 @@ import {
 } from "../../redux/actionCreators/userActions";
 import { getAllCategories, setCurrentPage } from "../../redux/actionCreators/blogActions";
 import { group } from "console";
-import { forEach, initial, values } from "lodash";
+import { forEach, initial, random, values } from "lodash";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode !== "dark" ? "whitesmoke" : "#fff",
@@ -94,7 +94,7 @@ const BlogTitleItem: FC<ChildComponentProps> = ({ id, title, time }) => {
   });
   return (
     <>
-      <ListItem button sx={{ padding: 0, margin: 0 }}>
+      <ListItem  button sx={{ padding: 0, margin: 0 }}>
         <Link to={`/blog/show/${id}`} style={{ textDecoration: "none" }}>
           <Typography sx={{ fontSize: "1.3rem" }}>{title}</Typography>
 
@@ -285,7 +285,7 @@ const Dashboard: FC = (): ReactElement => {
           <CardContent>
             {/* <FormControl> */}
             <List>
-              <ListItem sx={{ padding: 0, margin: 0 }}>
+              <ListItem  sx={{ padding: 0, margin: 0 }}>
                 <ListItemText primary="• 人生の9割が確定(30歳)まで" />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>

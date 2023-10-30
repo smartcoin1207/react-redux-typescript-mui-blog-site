@@ -53,6 +53,7 @@ import { getAllCategories } from "../../redux/actionCreators/blogActions";
 import { Root } from "react-dom/client";
 import { current } from "@reduxjs/toolkit";
 import { serverUrl } from "../../services/axios";
+import { group } from "console";
 
 interface IUser {
   name: string;
@@ -143,6 +144,7 @@ const EditUser = () => {
       setDateOfBirth(current_user.birthday);
       setSelectedAvatar(`${serverUrl}upload/images/${current_user.avatar}`);
       setSelectedGroupId(current_user.group_id);
+      
       setUserId(current_user.user_id);
       setPhone(current_user.phone_number);
       setMemo(current_user.memo);
@@ -152,6 +154,8 @@ const EditUser = () => {
       } else {
         setSelectedDevice('2');
       }
+
+      
       setNinetieth_life(current_user.ninetieth_life);
       setWork_life(current_user.work_life);
       setDie_life(current_user.die_life);
@@ -164,7 +168,6 @@ const EditUser = () => {
       setAllowedGroupCategories(allowed_categories[current_user.group_id]);
       setAllowedCommonCategories(allowed_categories['1']);
       setAllowedCommon2Categories(allowed_categories['2']);
-
     }
   }, [current_user]);
 
@@ -173,6 +176,12 @@ const EditUser = () => {
       const filteredGroups = all_groups.filter(
         (group) => group.id != 1 && group.id != 2
       );
+      all_groups.forEach((group1:any) => {
+        if(group1.id == current_user?.group_id) {
+          setSelectedGroup(group1);
+          return 0;
+        }
+      });
       setTeamGroups(filteredGroups);
     } 
     if(role == 2) {
@@ -186,9 +195,19 @@ const EditUser = () => {
     if(all_categories) {
       setCommonData(all_categories['1']);
       setCommonData2(all_categories['2']);
-      setGroupData(all_categories[`${user?.group_id}`]);
+
+      setGroupData(all_categories[`${selectedGroupId}`]);
     }
   }, [all_categories]);
+
+  const isSelfGroupShow = () => {
+    let isSelfGroupShow: boolean = false;
+    if(selectedRole == '3' && groupData){
+      isSelfGroupShow = true;      
+    }
+    
+    return isSelfGroupShow;
+  }
 
   const handleRoleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSelectedRole(event.target.value);
@@ -450,7 +469,8 @@ const EditUser = () => {
                 required
               />
             </Stack>
-            {(showRoleSelection && current_user?.role_id != 2) &&  (
+
+            {(showRoleSelection && current_user?.role_id != '2') &&  (
               <Card
                 sx={{
                   marginTop: "20px",
@@ -734,8 +754,7 @@ const EditUser = () => {
                 {/* </FormControl> */}
               </CardContent>
             </Card>
-
-            {selectedRole === "3" && (selectedGroup || role == 2) && (
+            {isSelfGroupShow() && (
               <Card
                 sx={{
                   mb: 4,
@@ -817,7 +836,7 @@ const EditUser = () => {
                       key={checkbox.id}
                       control={
                         <Checkbox
-                          checked={allowedCommon2Categories.includes(
+                          checked={allowedCommon2Categories?.includes(
                             `${checkbox.id}`
                           )}
                           onChange={handleCommon2CheckboxChange}

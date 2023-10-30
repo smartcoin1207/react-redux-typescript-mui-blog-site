@@ -33,6 +33,8 @@ import {
 } from "../../redux/actionCreators/blogActions";
 import { ThemeColor } from "../../styles/GlobalStyle";
 import { AddStep } from "../../redux/actionCreators/blogActions";
+import { current } from "@reduxjs/toolkit";
+import { Category } from "@mui/icons-material";
 
 const StepList: FC = (): ReactElement => {
   const { group_id } = useParams();
@@ -47,6 +49,8 @@ const StepList: FC = (): ReactElement => {
   );
 
   const [viewCategories, setViewCategories] = useState<any[]>([]);
+  const [viewCategoriesId, setViewCategoriesId] = useState<any[]>([]);
+
   const [allCategories, setAllCategories] = useState<any[]>([]);
   const [group, setGroup] = useState<any>(null);
 
@@ -54,7 +58,6 @@ const StepList: FC = (): ReactElement => {
 
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-
 
   const [modalDataId, setModalDataId] = useState("");
   const [modalData, setModalData] = useState("");
@@ -64,12 +67,13 @@ const StepList: FC = (): ReactElement => {
   }, []);
 
   useEffect(() => {
-    dispatch(setCurrentPage('top'));
-  }, [])
+    dispatch(setCurrentPage("top"));
+  }, []);
 
   useEffect(() => {
     if (current_group) {
       setViewCategories([]);
+      setViewCategoriesId([]);
       setGroup(null);
       setAllCategories([]);
     }
@@ -78,26 +82,53 @@ const StepList: FC = (): ReactElement => {
       const allowed_categories = user
         ? JSON.parse(user.allowed_categories)
         : null;
-
       const categories = current_group.categories;
       setAllCategories(categories);
 
-      if (user.role_id == 1 || user.role_id == 2) {
+      if(user.role_id == 1 || (user.role_id == 2 && (current_group.id == user.group_id || current_group.id  == '1'))){
         setViewCategories(categories);
+        let tmp: any[] = [];
+        categories?.forEach((category: any) => {
+          tmp.push(category.id);
+        });
+        setViewCategoriesId(tmp);
       } else {
         const allow = allowed_categories[`${group_id}`];
         if (allow) {
           let temp: any = [];
+          let tmp  : any = [];
 
-          categories.forEach((category: any) => {
-            if (allow.includes(`${category?.id}`)) temp.push(category);
+          categories?.forEach((category: any) => {
+            if (allow.includes(`${category?.id}`)) {
+              temp.push(category);
+              tmp.push(category.id);
+            } 
           });
           setViewCategories(temp);
+          setViewCategoriesId(tmp)
         }
       }
     }
     console.log(current_group);
   }, [current_group]);
+
+  const isCategoryOpen = (category: any) => {
+    let isVisible = true;
+
+    if(!viewCategoriesId.includes(category.id)) {
+       isVisible = false;
+    }
+    if (category?.blog_count == "0") {
+      isVisible = false;
+    }
+    if (
+      user?.role_id == "1" ||
+      (user?.role_id == "2" && group?.id == user?.group_id)
+    ) {
+      isVisible = true;
+    }
+    return isVisible;
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -127,7 +158,6 @@ const StepList: FC = (): ReactElement => {
     setOpenDelete(true);
   };
 
-
   const handleCreate = (step: any) => {
     const newStep = {
       group_id: group.id,
@@ -147,7 +177,6 @@ const StepList: FC = (): ReactElement => {
     dispatch(EditStep(navigate, newStep, modalDataId));
   };
 
-
   const handleStepDelete = () => {
     // const newStep = {
     //   group_id: group.id
@@ -155,7 +184,7 @@ const StepList: FC = (): ReactElement => {
     setOpenDelete(false);
     // console.log(newStep)
 
-    dispatch(DeleteStep( modalDataId));
+    dispatch(DeleteStep(modalDataId));
   };
 
   const Transition = React.forwardRef(function Transition(
@@ -189,23 +218,27 @@ const StepList: FC = (): ReactElement => {
 
       {openDelete && (
         <Dialog
-        open={openDelete}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={handleCloseDelete}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"指定したステップを削除できます"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-          { modalData + "を本当に削除しますか？"}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDelete} color="success">同意しない</Button>
-          <Button onClick={handleStepDelete} color="error">同意する</Button>
-        </DialogActions>
-      </Dialog>
+          open={openDelete}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={handleCloseDelete}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle>{"指定したステップを削除できます"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              {modalData + "を本当に削除しますか？"}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDelete} color="success">
+              同意しない
+            </Button>
+            <Button onClick={handleStepDelete} color="error">
+              同意する
+            </Button>
+          </DialogActions>
+        </Dialog>
       )}
 
       <Card>
@@ -304,64 +337,39 @@ const StepList: FC = (): ReactElement => {
                       justifyContent: "space-between",
                     }}
                   >
-
-                {(user?.role_id == '1' ||
-                (user?.role_id == '2' && group?.id == user?.group_id)) && (
-                  <Link
-                  to={`/genre/genres/${category?.id}`}
-                  style={{ textDecoration: "none", color: "initial" }}
-                >
-                  <Typography
-                    sx={{
-                      textAlign: "left",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {category?.name}{" "}
-                    <Box sx={{ display: "inline", pl: 1 }}>
-                      {"( " + category?.blog_count + " )"}
-                    </Box>
-                  </Typography>
-                </Link>
-                )}
-              {!(user?.role_id == '1' ||
-                (user?.role_id == '2' && group?.id == user?.group_id)) && category?.blog_count != '0' && (
-                  <Link
-                  to={`/genre/genres/${category?.id}`}
-                  style={{ textDecoration: "none", color: "initial" }}
-                >
-                  <Typography
-                    sx={{
-                      textAlign: "left",
-                      fontSize: "1.2rem",
-                    }}
-                  >
-                    {category?.name}{" "}
-                    <Box sx={{ display: "inline", pl: 1 }}>
-                      {"( " + category?.blog_count + " )"}
-                    </Box>
-                  </Typography>
-                </Link>
-                )}
-
-              {!(user?.role_id == '1' ||
-                (user?.role_id == '2' && group?.id == user?.group_id)) && category?.blog_count == '0' && (
-                  <Box>
-                  <Typography
-                      sx={{
-                        textAlign: "left",
-                        fontSize: "1.2rem",
-                      }}
-                    >
-                      {category?.name}{" "}
-                      <Box sx={{ display: "inline", pl: 1 }}>
-                        {"( " + category?.blog_count + " )"}
+                    {isCategoryOpen(category) ? (
+                      <Link
+                        to={`/genre/genres/${category?.id}`}
+                        style={{ textDecoration: "none", color: "initial" }}
+                      >
+                        <Typography
+                          sx={{
+                            textAlign: "left",
+                            fontSize: "1.2rem",
+                          }}
+                        >
+                          {category?.name}{" "}
+                          <Box sx={{ display: "inline", pl: 1 }}>
+                            {"( " + category?.blog_count + " )"}
+                          </Box>
+                        </Typography>
+                      </Link>
+                    ) : (
+                      <Box>
+                        <Typography
+                          sx={{
+                            textAlign: "left",
+                            fontSize: "1.2rem",
+                            color: 'grey'
+                          }}
+                        >
+                          {category?.name}{" "}
+                          <Box sx={{ display: "inline", pl: 1 }}>
+                            {"( " + category?.blog_count + " )"}
+                          </Box>
+                        </Typography>
                       </Box>
-                    </Typography>
-                  </Box>
-                )}
-
-
+                    )}
 
                     {(user?.role_id == 1 ||
                       (user?.role_id == 2 && user?.group_id == group?.id)) && (
