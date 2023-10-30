@@ -93,6 +93,7 @@ const SideBar: FC = (): ReactElement => {
             sx={{
               textAlign: "center",
               fontWeight: "bold",
+              fontSize: '1.3rem',
               my: "1rem",
               color: isDark
                 ? theme.palette.success.dark
