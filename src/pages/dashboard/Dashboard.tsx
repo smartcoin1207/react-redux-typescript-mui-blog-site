@@ -95,7 +95,7 @@ const BlogTitleItem: FC<ChildComponentProps> = ({ id, title, time }) => {
   return (
     <>
       <ListItem  button sx={{ padding: 0, margin: 0 }}>
-        <Link to={`/blog/show/${id}`} style={{ textDecoration: "none" }}>
+        <Link to={`/blog/show/${id}`} style={{ textDecoration: "none", width: '100%' }}>
           <Typography sx={{ fontSize: "1.3rem" }}>{title}</Typography>
 
           <Typography sx={{ mr: 2, color: "grey" }}>{formattedDate}</Typography>

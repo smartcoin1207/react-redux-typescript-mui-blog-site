@@ -275,7 +275,7 @@ const GenreList: FC = (): ReactElement => {
                   >
                     <Link
                       to={`/blog/blogs/${genre?.id}`}
-                      style={{ textDecoration: "none", color: "initial" }}
+                      style={{ textDecoration: "none", color: "initial", width: '100%' }}
                     >
                       <Typography
                         sx={{

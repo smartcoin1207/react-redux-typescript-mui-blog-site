@@ -328,6 +328,7 @@ const StepList: FC = (): ReactElement => {
             <Card>
               <CardContent sx={{}}>
                 {allCategories?.map((category: any) => (
+                  
                   <ListItem
                     button
                     sx={{
@@ -335,12 +336,12 @@ const StepList: FC = (): ReactElement => {
                       backgroundColor: "#ffffff",
                       display: "flex",
                       justifyContent: "space-between",
-                    }}
+                    }}  
                   >
                     {isCategoryOpen(category) ? (
                       <Link
                         to={`/genre/genres/${category?.id}`}
-                        style={{ textDecoration: "none", color: "initial" }}
+                        style={{ textDecoration: "none", color: "initial" , width:'100%'}}
                       >
                         <Typography
                           sx={{
@@ -373,7 +374,7 @@ const StepList: FC = (): ReactElement => {
 
                     {(user?.role_id == 1 ||
                       (user?.role_id == 2 && user?.group_id == group?.id)) && (
-                      <Box sx={{ display: "flex", justifyContent: "right" }}>
+                      <Box sx={{ display: "flex", justifyContent: "right", zIndex: 1000 }}>
                         <Button
                           variant="outlined"
                           color="success"
@@ -404,6 +405,10 @@ const StepList: FC = (): ReactElement => {
                       </Box>
                     )}
                   </ListItem>
+
+
+
+
                 ))}
               </CardContent>
             </Card>
