@@ -131,17 +131,12 @@ const BlogList1: FC = (): ReactElement => {
 
       <Card>
         <CardContent>
-          {/* <Typography
+          <Typography
             sx={{ textAlign: "center", fontWeight: "bold", my: "1rem" }}
-            variant="h4"
+            variant="h6"
           >
-            ようこそ{"   "}
-            <Box style={{ color: ThemeColor.main, display: "inline-block" }}>
-              {user?.name} さん
-            </Box>
-            ID: {user?.user_id}
+          ブログリスト
           </Typography>
-          <Divider orientation="horizontal" /> */}
 
 
           <Box sx={{ mt: 4, width: "100%" }}>

@@ -368,3 +368,23 @@ export const AddBlog =
       ToastMessage(err.response);
     }
   };
+
+  export const ChangeUserStatus =
+  (navigate: any, id: any): any =>
+  async (dispatch: Dispatch<Action>) => {
+    try {
+      const config: Config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const response: AxiosResponse<any> = await axios.post(
+        `/auth/user/changestatus/${id}`,
+        config
+      );
+
+      ToastMessage(response);
+    } catch (err: any) {
+      ToastMessage(err.response);
+    }
+  };

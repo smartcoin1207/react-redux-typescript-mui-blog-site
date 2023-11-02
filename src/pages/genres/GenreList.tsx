@@ -179,7 +179,7 @@ const GenreList: FC = (): ReactElement => {
         <DialogTitle>{"指定したジャンルを削除できます"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-          { modalData + "を本当に削除しますか？"}
+          { modalData + "を本当に削除しますか？ このジャンルに属するすべてのブログがすべて消去されます。"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -191,17 +191,13 @@ const GenreList: FC = (): ReactElement => {
 
       <Card>
         <CardContent>
-          {/* <Typography
+          <Typography
             sx={{ textAlign: "center", fontWeight: "bold", my: "1rem" }}
-            variant="h4"
+            variant="h5"
           >
-            ようこそ{"   "}
-            <Box style={{ color: ThemeColor.main, display: "inline-block" }}>
-              {user?.name} さん
-            </Box>
-            ID: {user?.user_id}
+          ジャンルリスト
           </Typography>
-          <Divider orientation="horizontal" /> */}
+          {/* <Divider orientation="horizontal" /> */}
 
           <Box sx={{ mt: 4 }}>
             {/* <Typography

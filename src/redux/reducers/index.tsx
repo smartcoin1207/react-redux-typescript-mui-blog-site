@@ -10,7 +10,7 @@ interface RootStateType {
     readonly alert: AlertState;
     readonly auth: AuthState;
     readonly companies: CompaniesState;
-    users: IUserState;
+    readonly users: IUserState;
     readonly blog : IBlogState;
 }
 

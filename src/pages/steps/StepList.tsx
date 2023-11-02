@@ -227,7 +227,7 @@ const StepList: FC = (): ReactElement => {
           <DialogTitle>{"指定したステップを削除できます"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-slide-description">
-              {modalData + "を本当に削除しますか？"}
+              {modalData + "を本当に削除しますか？ このステップに属するすべてのジャンルとブログがすべて消去されます。"}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
