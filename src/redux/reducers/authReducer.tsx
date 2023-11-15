@@ -1,58 +1,92 @@
-import { Reducer } from 'redux';
+import { Reducer } from "redux";
 
-import { IAuth as Auth } from '../../models/auth';
-import { IUser } from '../../models/user';
-import { Action, ActionType } from '../actionTypes/authActionTypes';
-    
+import { IAuth as Auth, IQrScan } from "../../models/auth";
+import { IUser } from "../../models/user";
+import {
+  Action,
+  ActionType,
+  IAuthQrScan,
+} from "../actionTypes/authActionTypes";
 
 export interface IAuthState {
-    authToken : boolean ,
-    isPasswordChanged: boolean,
-    user : IUser | undefined | null;
-    loading: boolean;
-    error? : any | null;
+  login_status: string;
+  authToken: boolean;
+  isPasswordChanged: boolean;
+  user: IUser | undefined | null;
+  loading: boolean;
+  error?: any | null;
+  qrScan? : IQrScan | null
+
 }
 
 const initialState = {
-    authToken : false ,
-    isPasswordChanged: false,
-    user : null , 
-    loading: false,
-    error : null
-}
+  login_status: "",
+  authToken: false,
+  isPasswordChanged: false,
+  user: null,
+  loading: false,
+  error: null,
+  qrScan: null
+};
 
 export const AuthReducer: Reducer<IAuthState, Action> = (
-    state = initialState,
-    action
+  state = initialState,
+  action
 ) => {
-    switch (action.type) {
-        case ActionType.AUTH_START:
-            return { ...state, loading: true };
+  switch (action.type) {
+    case ActionType.AUTH_START:
+      return { ...state, loading: true };
 
-        case ActionType.AUTH_SUCCESS:
-            const auth: Auth = action.payload
-            return {
-                ...state,
-                authToken : true , 
-                user : auth.user ,
-                error : null , 
-                loading: false
-            };
-        case ActionType.AUTH_FAIL:
-            return {
-                ...state,
-                user: null,
-                loading: false
-            };
-        case ActionType.AUTH_LOGOUT:
-            return {
-                ...state,
-                user: null,
-                loading: false,
-                authToken: false
-            }
+    case ActionType.AUTH_SUCCESS:
+      const auth: Auth = action.payload;
+      return {
+        ...state,
+        login_status: "LOGGED",
+        authToken: true,
+        user: auth.user,
+        error: null,
+        loading: false,
+      };
 
-        default:
-            return state;
-    }
+    case ActionType.AUTH_QR_SCAN:
+      const scan: IQrScan = action.payload;
+      return {
+        ...state,
+        user: null,
+        loading: false,
+        login_status: "QRSCAN",
+        qrScan: scan
+      };
+
+    case ActionType.AUTH_OPT:
+      const scan1: IQrScan = action.payload;
+
+      return {
+        ...state,
+        login_status: "OTP",
+        qrScan: scan1,
+        user: null,
+        loading: false,
+      };
+
+    case ActionType.AUTH_FAIL:
+      return {
+        ...state,
+        user: null,
+        loading: false,
+      };
+
+    case ActionType.AUTH_LOGOUT:  
+      return {
+        ...state,
+        user: null,
+        loading: false,
+        authToken: false,
+        login_status: '',
+        qrScan: null,
+      };
+
+    default:
+      return state;
+  }
 };

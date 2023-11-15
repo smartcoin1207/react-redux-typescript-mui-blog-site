@@ -11,6 +11,8 @@ import {
   ActionType,
   IAuthFail,
   IAuthLogout,
+  IAuthOPT,
+  IAuthQrScan,
   IAuthStart,
   IAuthSuccess,
 } from "../actionTypes/authActionTypes";
@@ -36,7 +38,7 @@ export const AuthStart =
       password,
     });
     try {
-      const response: AxiosResponse<Auth> = await axios.post(
+      const response: AxiosResponse<any> = await axios.post(
         `/auth/login`,
         body,
         config
@@ -44,14 +46,30 @@ export const AuthStart =
 
       const token = response.data.access_token;
       const usertoken = response.data.user_token;
-      
-      setToken(token);
-      setUserToken(usertoken);
 
-      dispatch<IAuthSuccess>({
-        type: ActionType.AUTH_SUCCESS,
-        payload: response.data,
-      });
+      const {login_status} = response.data;
+      
+      if(login_status == 'LOGGED') {
+        setToken(token);
+        setUserToken(usertoken);
+  
+        dispatch<IAuthSuccess>({
+          type: ActionType.AUTH_SUCCESS,
+          payload: response.data,
+        });
+      } 
+      else if(login_status == 'QRSCAN') {
+        dispatch<IAuthQrScan>({
+          type: ActionType.AUTH_QR_SCAN,
+          payload: response.data
+        })
+      } else if(login_status == 'OTP') {
+        dispatch<IAuthOPT>({
+          type: ActionType.AUTH_OPT,
+          payload: response.data
+        })
+      }
+
     } catch (err: any) {
       ToastMessage(err.response);
       dispatch<IAuthFail>({
@@ -59,6 +77,50 @@ export const AuthStart =
       });
     }
   };
+
+  export const AuthOTPLogin =
+  (otp: string, user_id: string, password: string): any =>
+  async (dispatch: Dispatch<Action>) => {
+    dispatch<IAuthStart>({ type: ActionType.AUTH_START });
+    // Request Header
+    const config: Config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    // Request Body
+    const body = JSON.stringify({ 
+      otp,
+      user_id,
+      password
+    });
+    try {
+      const response: AxiosResponse<any> = await axios.post(
+        `/auth/loginotp`,
+        body,
+        config
+      );
+
+      const token = response.data.access_token;
+      const usertoken = response.data.user_token;
+        
+        setToken(token);
+        setUserToken(usertoken);
+        
+        dispatch<IAuthSuccess>({
+          type: ActionType.AUTH_SUCCESS,
+          payload: response.data,
+        });
+      
+    
+    } catch (err: any) {
+      ToastMessage(err.response);
+      dispatch<IAuthFail>({
+        type: ActionType.AUTH_FAIL,
+      });
+    }
+  };
+
 
   export const UserProfile = (): any => async (dispatch: Dispatch<Action>) => {
     dispatch<IAuthStart>({ type: ActionType.AUTH_START });

@@ -1,10 +1,13 @@
-import { IAuth as Auth } from '../../models/auth';
+import { IAuth as Auth, IQrScan } from '../../models/auth';
 
 export enum ActionType {
     AUTH_START = 'AUTH_START',
     AUTH_SUCCESS = 'AUTH_SUCCESS',
     AUTH_FAIL = 'AUTH_FAIL',
-    AUTH_LOGOUT = 'AUTH_LOGOUT'
+    AUTH_LOGOUT = 'AUTH_LOGOUT',
+    AUTH_QR_SCAN = 'AUTH_QR_SCAN',
+    AUTH_OPT = 'AUTH_OPT',
+
 }
 
 export interface IAuthStart {
@@ -24,8 +27,20 @@ export interface IAuthLogout {
     payload: string | null;
 }
 
+export interface IAuthQrScan {
+    type: ActionType.AUTH_QR_SCAN;
+    payload: IQrScan
+}
+
+export interface IAuthOPT {
+    type: ActionType.AUTH_OPT;
+    payload: IQrScan;
+}
+
 export type Action =
     | IAuthStart
     | IAuthSuccess
     | IAuthFail
     | IAuthLogout
+    | IAuthQrScan
+    | IAuthOPT

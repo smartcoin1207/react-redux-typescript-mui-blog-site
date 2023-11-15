@@ -2,7 +2,9 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-export const serverUrl = "http://127.0.0.1:8000/";
+// export const serverUrl = "https://eacc-65-108-126-117.ngrok-free.app/";
+export const serverUrl = "http://localhost:8000/";
+
 export const baseURL = serverUrl + "api/";
 
 const instance = axios.create({

@@ -16,11 +16,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import {Card, CardMedia} from "@mui/material";
 import { ChangeUserStatus, DeleteUserAction, GetUsers } from "../../redux/actionCreators/userActions";
 import { RootState } from "../../redux/store/store";
 import { ThemeColor } from "../../styles/GlobalStyle";
 import { baseURL, serverUrl } from "../../services/axios";
 import { relative } from "path";
+import { QrCode } from "@mui/icons-material";
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -76,6 +78,18 @@ const StatusSwitch = styled(Switch)(({ theme }) => ({
     margin: 2,
   },
 }));
+
+const useStyles = styled('div')({
+  card: {
+    maxWidth: 300,
+  },
+  media: {
+    height: 0,
+    paddingTop: '56.25%', // 16:9 aspect ratio
+  },
+});
+
+
 
 const UserList: FC = (): ReactElement => {
   const dispatch = useDispatch();
@@ -150,6 +164,7 @@ const UserList: FC = (): ReactElement => {
             <TableRow>
               <StyledTableCell align="center">画像</StyledTableCell>
               <StyledTableCell  align="center">ユーザーID</StyledTableCell>
+              <StyledTableCell  align="center">QRコード</StyledTableCell>
               <StyledTableCell align="center">名前</StyledTableCell>
               <StyledTableCell align="center">ふりがな</StyledTableCell>
               <StyledTableCell align="center">
@@ -158,7 +173,7 @@ const UserList: FC = (): ReactElement => {
               <StyledTableCell align="center">アカウント種別</StyledTableCell>
               <StyledTableCell align="center">グループ</StyledTableCell>
               <StyledTableCell align="center">編集</StyledTableCell>
-              <StyledTableCell align="center">削除</StyledTableCell>
+              <StyledTableCell align="center">停止</StyledTableCell>
             </TableRow>
           </TableHead>
 
@@ -181,6 +196,15 @@ const UserList: FC = (): ReactElement => {
                   />
                 </StyledTableCell>
                 <StyledTableCell align="center">{user.user_id}</StyledTableCell>
+                <StyledTableCell align="center">
+                  {(user.qr_codeurl == null || user.qr_codeurl == '') && (
+                    <></>
+                  )}
+                  {user.qr_codeurl && (
+                   <img style={{width: 100, height:100}} src={`${serverUrl}upload/qrcodes/${user.qr_codeurl}`} alt="QRコード" /> 
+                   )}
+                   </StyledTableCell>
+
 
                 <StyledTableCell align="center" component="th" scope="row">
                   {user.name}

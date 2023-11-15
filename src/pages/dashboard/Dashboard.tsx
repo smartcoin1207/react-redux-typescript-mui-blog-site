@@ -7,6 +7,8 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import { Link } from "react-router-dom";
 import { RootState } from "../../redux/store/store";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import "dayjs/locale/ja";
 
 import { styled } from "@mui/material/styles"; //useTheme
 import {
@@ -158,6 +160,12 @@ const Dashboard: FC = (): ReactElement => {
   const [name, setName] = useState("");
   const [searchTitle, setSearchTitle] = useState("");
   const [searchContent, setSearchContent] = useState("");
+  const [ninetieth_life, setNinetieth_life] = useState(0);
+  const [work_life, setWork_life] = useState(0);
+  const [die_life, setDie_life] = useState(0);
+  const [healthy_life, setHealthy_life] = useState(0);
+  const [average_life, setAverage_life] = useState(0);
+
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -173,6 +181,18 @@ const Dashboard: FC = (): ReactElement => {
 
   useEffect(() => {
     setName(user?.name);
+    if(user) {
+      const currentDate = dayjs();
+      const birthDate = dayjs(user.birthday);
+      const currentAge = currentDate.diff(birthDate, "year");
+
+      setNinetieth_life(parseInt(user.ninetieth_life) - currentAge);
+      setWork_life(parseInt(user.work_life) - currentAge);
+      setDie_life(parseInt(user.die_life) - currentAge);
+      setHealthy_life(parseInt(user.healthy_life) - currentAge);
+      setAverage_life(parseInt(user.average_life) - currentAge);
+    }
+    
   }, [user]);
 
   useEffect(() => {
@@ -289,14 +309,14 @@ const Dashboard: FC = (): ReactElement => {
                 <ListItemText primary="• 人生の9割が確定(30歳)まで" />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>
-                  {user?.ninetieth_life} 年
+                  {ninetieth_life} 年
                 </Typography>
               </ListItem>
               <Divider sx={{ mt: 1, mb: 1 }} />
               <ListItem sx={{ padding: 0, margin: 0 }}>
                 <ListItemText primary="• 労働寿命まで後" />
                 <Typography variant="h6" sx={{ pl: 1 }}>
-                  {user?.work_life} 年
+                  {work_life} 年
                 </Typography>
               </ListItem>
 
@@ -305,7 +325,7 @@ const Dashboard: FC = (): ReactElement => {
                 <ListItemText primary="• 死んでいるかもしれない日まで " />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>
-                  {user?.die_life} 年
+                  {die_life} 年
                 </Typography>
               </ListItem>
 
@@ -314,7 +334,7 @@ const Dashboard: FC = (): ReactElement => {
                 <ListItemText primary="• 健康寿命まで後" />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>
-                  {user?.healthy_life} 年
+                  {healthy_life} 年
                 </Typography>
               </ListItem>
 
@@ -323,7 +343,7 @@ const Dashboard: FC = (): ReactElement => {
                 <ListItemText primary="• 平均寿命まで後 " />
 
                 <Typography variant="h6" sx={{ pl: 1 }}>
-                  {user?.average_life} 年
+                  {average_life} 年
                 </Typography>
               </ListItem>
               <Divider sx={{ mt: 1, mb: 1 }} />

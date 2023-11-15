@@ -10,7 +10,6 @@
 - react-chartjs-2: 5.2.0
 - react-pro-sidebar: 1.0.0
 
-![ProTemplate](https://user-images.githubusercontent.com/47317870/219984027-c5915ed8-ebb4-4d1a-a8a0-dfebb1521c50.png)
 
 ### Installation:
 ### `npm install -global react-create-app`

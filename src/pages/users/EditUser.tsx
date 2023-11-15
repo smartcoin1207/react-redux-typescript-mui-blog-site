@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { toast } from "react-toastify";
 
 import {
   TextField,
@@ -92,6 +93,7 @@ const EditUser = () => {
   const [healthy_life, setHealthy_life] = useState("");
   const [average_life, setAverage_life] = useState("");
   const [status, setStatus] = useState("1");
+  const [old, setOld] = useState(0);
 
   const [commonData, setCommonData] = useState<ICategory[]>([]);
   const [commonData2, setCommonData2] = useState<ICategory[]>([]);
@@ -100,6 +102,8 @@ const EditUser = () => {
   const [selectedGroupId, setSelectedGroupId] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
   const [teamGroups, setTeamGroups] = useState<any[]>([]);
+  const maxDate = dayjs().endOf("day");
+
   const [allowedCommonCategories, setAllowedCommonCategories] = useState<any[]>(
     []
   );
@@ -131,6 +135,15 @@ const EditUser = () => {
       setSelectedRole("3");
     }
   }, []);
+
+  useEffect(() => {
+    const currentDate = dayjs();
+    const birthDate = dayjs(dateOfBirth);
+    const currentAge = currentDate.diff(birthDate, "year");
+    setOld(currentAge);
+    console.log(currentAge);
+  }, [dateOfBirth]);
+
 
   useEffect(() => {
     dispatch(getAllCategories());
@@ -318,7 +331,12 @@ const EditUser = () => {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-
+    if(old <=0) {
+      toast.error("誕生日を正確に入力してください。", {
+        autoClose: 1000,
+      });
+      return;
+    }
     const formData = new FormData();
 
     if (avatar) {
@@ -666,11 +684,11 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={ninetieth_life}
                       onChange={(e) => setNinetieth_life(e.target.value)}
-                      inputProps={{ min: 0, max: 999 }}
+                      inputProps={{ min: old, max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
-                      年
+                      歳
                     </Typography>
                   </ListItem>
                   <Divider sx={{ mt: 1, mb: 1 }} />
@@ -684,11 +702,11 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={work_life}
                       onChange={(e) => setWork_life(e.target.value)}
-                      inputProps={{ min: 0, max: 999 }}
+                      inputProps={{ min: old, max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
-                      年
+                      歳
                     </Typography>
                   </ListItem>
 
@@ -703,11 +721,11 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={die_life}
                       onChange={(e) => setDie_life(e.target.value)}
-                      inputProps={{ min: 0, max: 999 }}
+                      inputProps={{ min: old, max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
-                      年
+                      歳
                     </Typography>
                   </ListItem>
 
@@ -722,11 +740,11 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={healthy_life}
                       onChange={(e) => setHealthy_life(e.target.value)}
-                      inputProps={{ min: 0, max: 999 }}
+                      inputProps={{ min: old, max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
-                      年
+                      歳
                     </Typography>
                   </ListItem>
 
@@ -741,11 +759,11 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={average_life}
                       onChange={(e) => setAverage_life(e.target.value)}
-                      inputProps={{ min: 0, max: 999 }}
+                      inputProps={{ min: old, max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
-                      年
+                      歳
                     </Typography>
                   </ListItem>
                   <Divider sx={{ mt: 1, mb: 1 }} />
