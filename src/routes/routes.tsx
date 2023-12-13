@@ -60,7 +60,6 @@ const AppRoutes: FC = () => {
       setRole(4);
       setIsAuthenticated(false);
     } 
-    console.log('ssss')
   }, [cookies])
 
   return (

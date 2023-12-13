@@ -144,13 +144,13 @@ export const AuthStart =
 export const logout = (navigate: any): any => {
     
     return (dispatch: Dispatch<Action>) => {
-      removeToken();
-      removeUserToken();
-      navigate('/');
+      // removeToken();
+      // removeUserToken();
 
       dispatch<IAuthLogout>({
         type: ActionType.AUTH_LOGOUT,
         payload: ''
       });
+
     };
   };

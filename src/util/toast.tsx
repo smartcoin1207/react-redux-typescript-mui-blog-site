@@ -28,12 +28,23 @@ const showErrorToast = (message: string) => {
 };
 
 export const ToastMessage = (response: any) => {
-console.log(response)
-//   const { navigateTo } = useNavigation();
 
-//   const navigate = useNavigate();
   const { status } = response;
+  
   const message = response.data.message;
+
+  if (typeof message === 'object') {
+    for (const key in message) {
+      const value = message[key][0];
+      showMessage(value, status);
+    }
+  } else if (typeof message === 'string') {
+    showMessage(message, status)
+  }
+};
+
+
+const showMessage = (message: string, status: number) => {
   if (status >= 200 && status < 300) {
     showSuccessToast(message);
   } else if (status >= 300 && status < 400) {
@@ -50,5 +61,4 @@ console.log(response)
     }
     showErrorToast(message);
   }
-
-};
+}

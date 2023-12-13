@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-export const serverUrl = "https://32a3-65-108-126-117.ngrok-free.app/";
+export const serverUrl = "https://34a1-65-108-126-117.ngrok-free.app/";
 // export const serverUrl = "http://localhost:8000/";
 
 export const baseURL = serverUrl + "api/";

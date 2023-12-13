@@ -434,6 +434,7 @@ const Dashboard: FC = (): ReactElement => {
             sx={{ color: ThemeColor.main }}
           />
           <Divider />
+          
           <CardContent>
             {new_blogs?.map((blog: any) => (
               <BlogTitleItem

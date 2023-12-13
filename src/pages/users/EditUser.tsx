@@ -684,7 +684,7 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={ninetieth_life}
                       onChange={(e) => setNinetieth_life(e.target.value)}
-                      inputProps={{ min: old, max: 999 }}
+                      inputProps={{ max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
@@ -702,7 +702,7 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={work_life}
                       onChange={(e) => setWork_life(e.target.value)}
-                      inputProps={{ min: old, max: 999 }}
+                      inputProps={{ max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
@@ -721,7 +721,7 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={die_life}
                       onChange={(e) => setDie_life(e.target.value)}
-                      inputProps={{ min: old, max: 999 }}
+                      inputProps={{ max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
@@ -740,7 +740,7 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={healthy_life}
                       onChange={(e) => setHealthy_life(e.target.value)}
-                      inputProps={{ min: old, max: 999 }}
+                      inputProps={{ max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}
@@ -759,7 +759,7 @@ const EditUser = () => {
                       sx={{ width: "70px" }}
                       value={average_life}
                       onChange={(e) => setAverage_life(e.target.value)}
-                      inputProps={{ min: old, max: 999 }}
+                      inputProps={{ max: 999 }}
                     />
                     <Typography variant="h6" sx={{ pl: 1 }}>
                       {" "}

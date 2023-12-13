@@ -7,6 +7,7 @@ import {
   ActionType,
   IAuthQrScan,
 } from "../actionTypes/authActionTypes";
+import { removeToken, removeUserToken } from "../../util/util";
 
 export interface IAuthState {
   login_status: string;
@@ -77,6 +78,8 @@ export const AuthReducer: Reducer<IAuthState, Action> = (
       };
 
     case ActionType.AUTH_LOGOUT:  
+    removeToken();
+    removeUserToken();
       return {
         ...state,
         user: null,

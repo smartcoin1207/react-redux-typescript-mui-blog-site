@@ -73,7 +73,6 @@ const Navbar: FC = (): ReactElement => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.auth.user);
   const userInfo: any = useSelector((state: RootState) => state.auth.user);
-
   const current_group = useSelector(
     (state: RootState) => state.blog.current_group
   );

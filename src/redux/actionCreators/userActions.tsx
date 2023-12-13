@@ -260,6 +260,7 @@ export const AddLeader =
       // navigate("/user/index");
       ToastMessage(response);
     } catch (err: any) {
+
       ToastMessage(err.response);
       dispatch<ICreateUserFail>({
         type: ActionType.CREATE_USER_FAIL,
@@ -380,6 +381,28 @@ export const AddBlog =
       };
       const response: AxiosResponse<any> = await axios.post(
         `/auth/user/changestatus/${id}`,
+        config
+      );
+
+      ToastMessage(response);
+    } catch (err: any) {
+      ToastMessage(err.response);
+    }
+  };
+
+
+  export const ChangePassword =
+  (new_password: any): any =>
+  async (dispatch: Dispatch<Action>) => {
+    try {
+      const config: Config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      const response: AxiosResponse<any> = await axios.post(
+        `/auth/user/changepassword`,
+        new_password,
         config
       );
 
